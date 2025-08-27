@@ -4,6 +4,7 @@ import com.jamith.globemedhms.application.services.patient.PatientService;
 import com.jamith.globemedhms.application.services.patient.PatientServiceImpl;
 import com.jamith.globemedhms.core.entities.Patient;
 import com.jamith.globemedhms.core.entities.Staff;
+import com.jamith.globemedhms.patterns.decorator.EncryptionDecorator;
 import com.jamith.globemedhms.presentation.controllers.PatientController;
 
 import javax.swing.*;
@@ -64,8 +65,8 @@ public class PatientView extends JPanel {
                     nameField.setText(selectedPatient.getName());
                     dobField.setText(selectedPatient.getDateOfBirth());
                     addressField.setText(selectedPatient.getAddress());
-                    medicalHistoryArea.setText(selectedPatient.getMedicalHistory());
-                    treatmentPlanArea.setText(selectedPatient.getTreatmentPlan());
+                    medicalHistoryArea.setText(EncryptionDecorator.decrypt(selectedPatient.getMedicalHistory()));
+                    treatmentPlanArea.setText(EncryptionDecorator.decrypt(selectedPatient.getTreatmentPlan()));
                 }
             }
         });
