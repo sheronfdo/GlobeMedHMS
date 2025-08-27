@@ -6,6 +6,7 @@ import com.jamith.globemedhms.core.entities.AuditLog;
 import com.jamith.globemedhms.core.entities.Staff;
 import com.jamith.globemedhms.infrastructure.repository.AuditLogRepository;
 import com.jamith.globemedhms.patterns.proxy.ResourceProxy;
+import com.jamith.globemedhms.presentation.views.appointment.AppointmentView;
 import com.jamith.globemedhms.presentation.views.patient.PatientView;
 import com.jamith.globemedhms.presentation.views.staff.StaffView;
 
@@ -123,6 +124,15 @@ public class MainFrame extends JFrame {
                 });
                 sidebar.add(manageStaffButton);
 
+                JButton manageAppointmentsButton = new JButton("Manage Appointments");
+                manageAppointmentsButton.addActionListener(e -> {
+                    proxy.accessResource(loggedInStaff, "APPOINTMENT_MANAGEMENT", "MANAGE_APPOINTMENTS");
+                    AppointmentView appointmentView = new AppointmentView(loggedInStaff);
+                    contentPanel.add(appointmentView, "MANAGE_APPOINTMENTS");
+                    ((CardLayout) contentPanel.getLayout()).show(contentPanel, "MANAGE_APPOINTMENTS");
+                });
+                sidebar.add(manageAppointmentsButton);
+
                 JButton managePatientsButton = new JButton("Manage Patients");
                 managePatientsButton.addActionListener(e -> {
                     try {
@@ -160,6 +170,15 @@ public class MainFrame extends JFrame {
                 sidebar.add(logoutButton);
             }
             case "DOCTOR" -> {
+                JButton manageAppointmentsButton = new JButton("Manage Appointments");
+                manageAppointmentsButton.addActionListener(e -> {
+                    proxy.accessResource(loggedInStaff, "APPOINTMENT_MANAGEMENT", "MANAGE_APPOINTMENTS");
+                    AppointmentView appointmentView = new AppointmentView(loggedInStaff);
+                    contentPanel.add(appointmentView, "MANAGE_APPOINTMENTS");
+                    ((CardLayout) contentPanel.getLayout()).show(contentPanel, "MANAGE_APPOINTMENTS");
+                });
+                sidebar.add(manageAppointmentsButton);
+
                 JButton viewPatientsButton = new JButton("View Patients");
                 viewPatientsButton.addActionListener(e -> {
                     try {
@@ -188,6 +207,15 @@ public class MainFrame extends JFrame {
                 sidebar.add(logoutButton);
             }
             case "NURSE" -> {
+                JButton manageAppointmentsButton = new JButton("Manage Appointments");
+                manageAppointmentsButton.addActionListener(e -> {
+                    proxy.accessResource(loggedInStaff, "APPOINTMENT_MANAGEMENT", "MANAGE_APPOINTMENTS");
+                    AppointmentView appointmentView = new AppointmentView(loggedInStaff);
+                    contentPanel.add(appointmentView, "MANAGE_APPOINTMENTS");
+                    ((CardLayout) contentPanel.getLayout()).show(contentPanel, "MANAGE_APPOINTMENTS");
+                });
+                sidebar.add(manageAppointmentsButton);
+
                 JButton viewPatientsButton = new JButton("View Patients");
                 viewPatientsButton.addActionListener(e -> {
                     try {

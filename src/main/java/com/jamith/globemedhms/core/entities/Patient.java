@@ -24,6 +24,9 @@ public class Patient {
     @Column(columnDefinition = "TEXT")
     private String treatmentPlan;
 
+    @Column(columnDefinition = "TEXT")
+    private String history; // For recording treatments and prescriptions
+
     public Patient() {}
 
     public Patient(String name, String dateOfBirth, String address, String medicalHistory, String treatmentPlan) {
@@ -32,6 +35,7 @@ public class Patient {
         this.address = address;
         this.medicalHistory = medicalHistory;
         this.treatmentPlan = treatmentPlan;
+        this.history = "";
     }
 
     // Getters and Setters
@@ -47,6 +51,12 @@ public class Patient {
     public void setMedicalHistory(String medicalHistory) { this.medicalHistory = medicalHistory; }
     public String getTreatmentPlan() { return treatmentPlan; }
     public void setTreatmentPlan(String treatmentPlan) { this.treatmentPlan = treatmentPlan; }
+    public String getHistory() { return history; }
+    public void setHistory(String history) { this.history = history; }
+
+    public void appendHistory(String entry) {
+        this.history += "\n" + entry;
+    }
 
     @Override
     public String toString() {

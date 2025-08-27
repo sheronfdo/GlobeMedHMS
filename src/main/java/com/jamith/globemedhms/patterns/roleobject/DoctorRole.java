@@ -11,6 +11,7 @@ public class DoctorRole implements Role {
         permissions.add("UPDATE_PATIENT_RECORDS");
         permissions.add("UPDATE_TREATMENT_PLANS");
         permissions.add("PRESCRIBE_MEDICATIONS");
+        permissions.add("MANAGE_APPOINTMENTS");
     }
 
     @Override

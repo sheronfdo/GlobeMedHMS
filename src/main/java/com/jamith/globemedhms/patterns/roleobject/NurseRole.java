@@ -9,6 +9,7 @@ public class NurseRole implements Role {
     public NurseRole() {
         permissions.add("VIEW_PATIENT_RECORDS");
         permissions.add("ADMINISTER_MEDICATIONS");
+        permissions.add("MANAGE_APPOINTMENTS");
     }
 
     @Override
