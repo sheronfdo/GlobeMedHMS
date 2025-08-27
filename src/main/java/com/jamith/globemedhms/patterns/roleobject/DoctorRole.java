@@ -8,6 +8,7 @@ public class DoctorRole implements Role {
 
     public DoctorRole() {
         permissions.add("VIEW_PATIENT_RECORDS");
+        permissions.add("UPDATE_PATIENT_RECORDS");
         permissions.add("UPDATE_TREATMENT_PLANS");
         permissions.add("PRESCRIBE_MEDICATIONS");
     }

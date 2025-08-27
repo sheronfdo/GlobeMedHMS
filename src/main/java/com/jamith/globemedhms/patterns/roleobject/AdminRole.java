@@ -10,6 +10,8 @@ public class AdminRole implements Role {
         permissions.add("MANAGE_STAFF");
         permissions.add("VIEW_ALL_RECORDS");
         permissions.add("GENERATE_REPORTS");
+        permissions.add("VIEW_PATIENT_RECORDS");
+        permissions.add("UPDATE_PATIENT_RECORDS");
     }
 
     @Override

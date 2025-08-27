@@ -15,5 +15,6 @@
         <!-- Entity mappings -->
         <mapping class="com.jamith.globemedhms.core.entities.Staff"/>
         <mapping class="com.jamith.globemedhms.core.entities.AuditLog"/>
+        <mapping class="com.jamith.globemedhms.core.entities.Patient"/>
     </session-factory>
 </hibernate-configuration>

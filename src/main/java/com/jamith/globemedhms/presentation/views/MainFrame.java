@@ -6,6 +6,7 @@ import com.jamith.globemedhms.core.entities.AuditLog;
 import com.jamith.globemedhms.core.entities.Staff;
 import com.jamith.globemedhms.infrastructure.repository.AuditLogRepository;
 import com.jamith.globemedhms.patterns.proxy.ResourceProxy;
+import com.jamith.globemedhms.presentation.views.patient.PatientView;
 import com.jamith.globemedhms.presentation.views.staff.StaffView;
 
 import javax.swing.*;
@@ -122,6 +123,19 @@ public class MainFrame extends JFrame {
                 });
                 sidebar.add(manageStaffButton);
 
+                JButton managePatientsButton = new JButton("Manage Patients");
+                managePatientsButton.addActionListener(e -> {
+                    try {
+                        proxy.accessResource(loggedInStaff, "PATIENT_RECORDS", "VIEW_ALL_RECORDS");
+                        PatientView patientView = new PatientView(loggedInStaff);
+                        contentPanel.add(patientView, "MANAGE_PATIENTS");
+                        ((CardLayout) contentPanel.getLayout()).show(contentPanel, "MANAGE_PATIENTS");
+                    } catch (SecurityException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Access Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                });
+                sidebar.add(managePatientsButton);
+
                 JButton viewReportsButton = new JButton("View Reports");
                 viewReportsButton.addActionListener(e -> {
                     try {
@@ -148,8 +162,14 @@ public class MainFrame extends JFrame {
             case "DOCTOR" -> {
                 JButton viewPatientsButton = new JButton("View Patients");
                 viewPatientsButton.addActionListener(e -> {
-                    auditLogRepository.save(new AuditLog(loggedInStaff.getId(), "Accessed View Patients", LocalDateTime.now()));
-                    showPlaceholder(contentPanel, "View Patients");
+                    try {
+                        proxy.accessResource(loggedInStaff, "PATIENT_RECORDS", "VIEW_PATIENT_RECORDS");
+                        PatientView patientView = new PatientView(loggedInStaff);
+                        contentPanel.add(patientView, "VIEW_PATIENTS");
+                        ((CardLayout) contentPanel.getLayout()).show(contentPanel, "VIEW_PATIENTS");
+                    } catch (SecurityException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Access Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 });
                 sidebar.add(viewPatientsButton);
 
@@ -170,8 +190,14 @@ public class MainFrame extends JFrame {
             case "NURSE" -> {
                 JButton viewPatientsButton = new JButton("View Patients");
                 viewPatientsButton.addActionListener(e -> {
-                    auditLogRepository.save(new AuditLog(loggedInStaff.getId(), "Accessed View Patients", LocalDateTime.now()));
-                    showPlaceholder(contentPanel, "View Patients");
+                    try {
+                        proxy.accessResource(loggedInStaff, "PATIENT_RECORDS", "VIEW_PATIENT_RECORDS");
+                        PatientView patientView = new PatientView(loggedInStaff);
+                        contentPanel.add(patientView, "VIEW_PATIENTS");
+                        ((CardLayout) contentPanel.getLayout()).show(contentPanel, "VIEW_PATIENTS");
+                    } catch (SecurityException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Access Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 });
                 sidebar.add(viewPatientsButton);
 
