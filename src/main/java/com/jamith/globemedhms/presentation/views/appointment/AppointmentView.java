@@ -51,27 +51,34 @@ public class AppointmentView extends JPanel {
         detailsPanel.setBorder(BorderFactory.createTitledBorder("Appointment Details"));
         detailsPanel.add(new JLabel("Staff:"));
         staffComboBox = new JComboBox<>(staffService.getAllStaff().toArray(new Staff[0]));
+        staffComboBox.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
         detailsPanel.add(staffComboBox);
         detailsPanel.add(new JLabel("Patient:"));
         patientComboBox = new JComboBox<>(patientService.getAllPatients().toArray(new Patient[0]));
+        patientComboBox.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
         detailsPanel.add(patientComboBox);
         detailsPanel.add(new JLabel("Date (YYYY-MM-DD):"));
         dateField = new JTextField(20);
+        dateField.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
         detailsPanel.add(dateField);
         detailsPanel.add(new JLabel("Time (HH:MM):"));
         timeField = new JTextField(20);
+        timeField.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
         detailsPanel.add(timeField);
         detailsPanel.add(new JLabel("Type:"));
         typeComboBox = new JComboBox<>(new String[]{"CONSULTATION", "DIAGNOSTICS", "SURGERY"});
+        typeComboBox.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
         detailsPanel.add(typeComboBox);
         detailsPanel.add(new JLabel("Treatment Details:"));
         treatmentArea = new JTextArea(5, 20);
+        treatmentArea.setEnabled(loggedInStaff.hasPermission("PRESCRIBE_MEDICATIONS"));
         detailsPanel.add(new JScrollPane(treatmentArea));
         detailsPanel.add(new JLabel("Prescription:"));
         prescriptionArea = new JTextArea(5, 20);
         prescriptionArea.setEnabled(loggedInStaff.hasPermission("PRESCRIBE_MEDICATIONS"));
         detailsPanel.add(new JScrollPane(prescriptionArea));
         bookButton = new JButton("Book Appointment");
+        bookButton.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
         detailsPanel.add(bookButton);
         completeButton = new JButton("Complete Appointment");
         completeButton.setEnabled(loggedInStaff.hasPermission("PRESCRIBE_MEDICATIONS"));
@@ -79,6 +86,7 @@ public class AppointmentView extends JPanel {
         add(detailsPanel, BorderLayout.CENTER);
 
         cancelButton = new JButton("Cancel Appointment");
+        cancelButton.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
         add(cancelButton, BorderLayout.SOUTH);
 
         // Listener for selecting appointment from list

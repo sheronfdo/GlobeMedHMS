@@ -7,8 +7,12 @@ import com.jamith.globemedhms.core.entities.Staff;
 import com.jamith.globemedhms.infrastructure.repository.AuditLogRepository;
 import com.jamith.globemedhms.patterns.proxy.ResourceProxy;
 import com.jamith.globemedhms.presentation.views.appointment.AppointmentView;
+import com.jamith.globemedhms.presentation.views.nurse.AdministerMedView;
 import com.jamith.globemedhms.presentation.views.patient.PatientView;
 import com.jamith.globemedhms.presentation.views.staff.StaffView;
+import com.jamith.globemedhms.presentation.views.pharmacist.ViewPrescriptionsView;
+import com.jamith.globemedhms.presentation.views.pharmacist.DispenseMedView;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -238,8 +242,15 @@ public class MainFrame extends JFrame {
 
                 JButton administerMedButton = new JButton("Administer Medications");
                 administerMedButton.addActionListener(e -> {
-                    auditLogRepository.save(new AuditLog(loggedInStaff.getId(), "Accessed Administer Medications", LocalDateTime.now()));
-                    showPlaceholder(contentPanel, "Administer Medications");
+                    try {
+                        proxy.accessResource(loggedInStaff, "ADMINISTER_MEDICATIONS", "ADMINISTER_MEDICATIONS");
+                        AdministerMedView administerMedView = new AdministerMedView(loggedInStaff);
+                        contentPanel.add(administerMedView, "ADMINISTER_MEDICATIONS");
+                        ((CardLayout) contentPanel.getLayout()).show(contentPanel, "ADMINISTER_MEDICATIONS");
+                        auditLogRepository.save(new AuditLog(loggedInStaff.getId(), "Accessed Administer Medications", LocalDateTime.now()));
+                    } catch (SecurityException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Access Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 });
                 sidebar.add(administerMedButton);
 
@@ -253,17 +264,32 @@ public class MainFrame extends JFrame {
             case "PHARMACIST" -> {
                 JButton viewPrescriptionsButton = new JButton("View Prescriptions");
                 viewPrescriptionsButton.addActionListener(e -> {
-                    auditLogRepository.save(new AuditLog(loggedInStaff.getId(), "Accessed View Prescriptions", LocalDateTime.now()));
-                    showPlaceholder(contentPanel, "View Prescriptions");
+                    try {
+                        proxy.accessResource(loggedInStaff, "PRESCRIPTIONS", "VIEW_PRESCRIPTIONS");
+                        ViewPrescriptionsView viewPrescriptionsView = new ViewPrescriptionsView(loggedInStaff);
+                        contentPanel.add(viewPrescriptionsView, "VIEW_PRESCRIPTIONS");
+                        ((CardLayout) contentPanel.getLayout()).show(contentPanel, "VIEW_PRESCRIPTIONS");
+                        auditLogRepository.save(new AuditLog(loggedInStaff.getId(), "Accessed View Prescriptions", LocalDateTime.now()));
+                    } catch (SecurityException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Access Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 });
                 sidebar.add(viewPrescriptionsButton);
 
                 JButton dispenseMedButton = new JButton("Dispense Medications");
                 dispenseMedButton.addActionListener(e -> {
-                    auditLogRepository.save(new AuditLog(loggedInStaff.getId(), "Accessed Dispense Medications", LocalDateTime.now()));
-                    showPlaceholder(contentPanel, "Dispense Medications");
+                    try {
+                        proxy.accessResource(loggedInStaff, "DISPENSE_MEDICATIONS", "DISPENSE_MEDICATIONS");
+                        DispenseMedView dispenseMedView = new DispenseMedView(loggedInStaff);
+                        contentPanel.add(dispenseMedView, "DISPENSE_MEDICATIONS");
+                        ((CardLayout) contentPanel.getLayout()).show(contentPanel, "DISPENSE_MEDICATIONS");
+                        auditLogRepository.save(new AuditLog(loggedInStaff.getId(), "Accessed Dispense Medications", LocalDateTime.now()));
+                    } catch (SecurityException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Access Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 });
                 sidebar.add(dispenseMedButton);
+
 
                 JButton logoutButton = new JButton("Logout");
                 logoutButton.addActionListener(e -> {
