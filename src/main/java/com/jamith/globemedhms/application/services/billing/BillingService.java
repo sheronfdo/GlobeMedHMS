@@ -1,0 +1,14 @@
+package com.jamith.globemedhms.application.services.billing;
+
+import com.jamith.globemedhms.core.entities.Appointment;
+import com.jamith.globemedhms.core.entities.Billing;
+
+import java.util.List;
+
+public interface BillingService {
+    List<Billing> getAllBillings();
+    void saveOrUpdateBilling(Billing billing);
+    Billing getBillingById(int id);
+    Billing generateBill(Appointment appointment, double amount);
+    Billing getBillingByAppointment(int appointmentId);
+}

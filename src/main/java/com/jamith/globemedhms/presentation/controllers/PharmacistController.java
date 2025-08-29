@@ -9,7 +9,6 @@ import com.jamith.globemedhms.core.entities.AuditLog;
 import com.jamith.globemedhms.core.entities.Patient;
 import com.jamith.globemedhms.core.entities.Staff;
 import com.jamith.globemedhms.infrastructure.repository.AuditLogRepository;
-import com.jamith.globemedhms.infrastructure.repository.PatientRepository;
 import com.jamith.globemedhms.presentation.views.pharmacist.DispenseMedView;
 import com.jamith.globemedhms.presentation.views.pharmacist.ViewPrescriptionsView;
 

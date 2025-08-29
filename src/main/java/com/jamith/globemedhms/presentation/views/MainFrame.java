@@ -7,6 +7,7 @@ import com.jamith.globemedhms.core.entities.Staff;
 import com.jamith.globemedhms.infrastructure.repository.AuditLogRepository;
 import com.jamith.globemedhms.patterns.proxy.ResourceProxy;
 import com.jamith.globemedhms.presentation.views.appointment.AppointmentView;
+import com.jamith.globemedhms.presentation.views.billing.BillingView;
 import com.jamith.globemedhms.presentation.views.nurse.AdministerMedView;
 import com.jamith.globemedhms.presentation.views.patient.PatientView;
 import com.jamith.globemedhms.presentation.views.staff.StaffView;
@@ -150,6 +151,22 @@ public class MainFrame extends JFrame {
                 });
                 sidebar.add(managePatientsButton);
 
+                JButton billingClaimsButton = new JButton("Billing and Claims");
+                billingClaimsButton.addActionListener(e -> {
+                    try {
+                        proxy.accessResource(loggedInStaff, "BILLING_CLAIMS", "MANAGE_BILLING");
+                        BillingView billingView = new BillingView(loggedInStaff);
+                        contentPanel.add(billingView, "BILLING_CLAIMS");
+                        ((CardLayout) contentPanel.getLayout()).show(contentPanel, "BILLING_CLAIMS");
+                        contentPanel.revalidate();
+                        contentPanel.repaint();
+                        auditLogRepository.save(new AuditLog(loggedInStaff.getId(), "Accessed Billing and Claims", LocalDateTime.now()));
+                    } catch (SecurityException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Access Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                });
+                sidebar.add(billingClaimsButton);
+
                 JButton viewReportsButton = new JButton("View Reports");
                 viewReportsButton.addActionListener(e -> {
                     try {
@@ -290,6 +307,22 @@ public class MainFrame extends JFrame {
                 });
                 sidebar.add(dispenseMedButton);
 
+
+                JButton billingClaimsButton = new JButton("Billing and Claims");
+                billingClaimsButton.addActionListener(e -> {
+                    try {
+                        proxy.accessResource(loggedInStaff, "BILLING_CLAIMS", "MANAGE_BILLING");
+                        BillingView billingView = new BillingView(loggedInStaff);
+                        contentPanel.add(billingView, "BILLING_CLAIMS");
+                        ((CardLayout) contentPanel.getLayout()).show(contentPanel, "BILLING_CLAIMS");
+                        contentPanel.revalidate();
+                        contentPanel.repaint();
+                        auditLogRepository.save(new AuditLog(loggedInStaff.getId(), "Accessed Billing and Claims", LocalDateTime.now()));
+                    } catch (SecurityException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Access Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                });
+                sidebar.add(billingClaimsButton);
 
                 JButton logoutButton = new JButton("Logout");
                 logoutButton.addActionListener(e -> {

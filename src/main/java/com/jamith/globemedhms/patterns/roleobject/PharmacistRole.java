@@ -9,6 +9,8 @@ public class PharmacistRole implements Role {
     public PharmacistRole() {
         permissions.add("VIEW_PRESCRIPTIONS");
         permissions.add("DISPENSE_MEDICATIONS");
+        permissions.add("MANAGE_BILLING");
+        permissions.add("PROCESS_CLAIMS");
     }
 
     @Override
