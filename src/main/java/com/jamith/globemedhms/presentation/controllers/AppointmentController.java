@@ -6,6 +6,7 @@ import com.jamith.globemedhms.core.entities.Appointment;
 import com.jamith.globemedhms.core.entities.Staff;
 import com.jamith.globemedhms.patterns.command.BookAppointmentCommand;
 import com.jamith.globemedhms.patterns.command.CancelAppointmentCommand;
+import com.jamith.globemedhms.patterns.proxy.ResourceProxy;
 import com.jamith.globemedhms.presentation.views.appointment.AppointmentView;
 
 import java.awt.event.ActionEvent;
@@ -14,6 +15,7 @@ import java.awt.event.ActionListener;
 public class AppointmentController {
     private final AppointmentView view;
     private final AppointmentService service = new AppointmentServiceImpl();
+    private final ResourceProxy proxy = new ResourceProxy();
     private final Staff loggedInStaff;
 
     public AppointmentController(AppointmentView view, Staff loggedInStaff) {
@@ -27,25 +29,38 @@ public class AppointmentController {
     class BookListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Appointment appointment = new Appointment(view.getSelectedStaff(), view.getSelectedPatient(), view.getDate(), view.getTime(), view.getType(), "SCHEDULED");
-            BookAppointmentCommand command = new BookAppointmentCommand(appointment);
-            command.execute();
-            view.updateAppointmentList(loggedInStaff);
-            view.showMessage("Appointment booked successfully!");
+            try {
+                proxy.accessResource(loggedInStaff, "APPOINTMENT", "UPDATE_PATIENT_RECORDS");
+                Appointment appointment = new Appointment(view.getSelectedStaff(), view.getSelectedPatient(),
+                        view.getDate(), view.getTime(), view.getType(), "SCHEDULED");
+                BookAppointmentCommand command = new BookAppointmentCommand(appointment);
+                command.execute();
+                view.updateAppointmentList(loggedInStaff);
+                view.showMessage("Appointment booked successfully!");
+            } catch (SecurityException ex) {
+                view.showMessage(ex.getMessage());
+            } catch (IllegalStateException ex) {
+                view.showMessage(ex.getMessage());
+            }
         }
     }
 
     class CancelListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Appointment selectedAppointment = view.getSelectedAppointment();
-            if (selectedAppointment != null) {
-                CancelAppointmentCommand command = new CancelAppointmentCommand(selectedAppointment);
-                command.execute();
-                view.updateAppointmentList(loggedInStaff);
-                view.showMessage("Appointment cancelled successfully!");
-            } else {
-                view.showMessage("Please select an appointment.");
+            try {
+                proxy.accessResource(loggedInStaff, "APPOINTMENT", "UPDATE_PATIENT_RECORDS");
+                Appointment selectedAppointment = view.getSelectedAppointment();
+                if (selectedAppointment != null) {
+                    CancelAppointmentCommand command = new CancelAppointmentCommand(selectedAppointment);
+                    command.execute();
+                    view.updateAppointmentList(loggedInStaff);
+                    view.showMessage("Appointment cancelled successfully!");
+                } else {
+                    view.showMessage("Please select an appointment.");
+                }
+            } catch (SecurityException ex) {
+                view.showMessage(ex.getMessage());
             }
         }
     }
@@ -53,15 +68,24 @@ public class AppointmentController {
     class CompleteListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Appointment selectedAppointment = view.getSelectedAppointment();
-            if (selectedAppointment != null) {
-                String treatmentDetails = view.getTreatmentDetails();
-                String prescription = view.getPrescription();
-                service.completeAppointment(selectedAppointment, treatmentDetails, prescription);
-                view.updateAppointmentList(loggedInStaff);
-                view.showMessage("Appointment completed successfully!");
-            } else {
-                view.showMessage("Please select an appointment.");
+            try {
+                proxy.accessResource(loggedInStaff, "PRESCRIPTION", "PRESCRIBE_MEDICATIONS");
+                Appointment selectedAppointment = view.getSelectedAppointment();
+                if (selectedAppointment != null) {
+                    String treatmentDetails = view.getTreatmentDetails();
+                    String prescription = view.getPrescription();
+                    if (prescription == null || prescription.trim().isEmpty()) {
+                        view.showMessage("Prescription cannot be empty for completion.");
+                        return;
+                    }
+                    service.completeAppointment(selectedAppointment, treatmentDetails, prescription);
+                    view.updateAppointmentList(loggedInStaff);
+                    view.showMessage("Appointment completed successfully with prescription!");
+                } else {
+                    view.showMessage("Please select an appointment.");
+                }
+            } catch (SecurityException ex) {
+                view.showMessage(ex.getMessage());
             }
         }
     }

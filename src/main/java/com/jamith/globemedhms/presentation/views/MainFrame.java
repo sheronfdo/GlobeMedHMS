@@ -194,8 +194,15 @@ public class MainFrame extends JFrame {
 
                 JButton prescribeMedButton = new JButton("Prescribe Medications");
                 prescribeMedButton.addActionListener(e -> {
-                    auditLogRepository.save(new AuditLog(loggedInStaff.getId(), "Accessed Prescribe Medications", LocalDateTime.now()));
-                    showPlaceholder(contentPanel, "Prescribe Medications");
+                    try {
+                        proxy.accessResource(loggedInStaff, "PRESCRIPTION", "PRESCRIBE_MEDICATIONS");
+                        AppointmentView appointmentView = new AppointmentView(loggedInStaff);
+                        contentPanel.add(appointmentView, "PRESCRIBE_MEDICATIONS");
+                        ((CardLayout) contentPanel.getLayout()).show(contentPanel, "PRESCRIBE_MEDICATIONS");
+                        auditLogRepository.save(new AuditLog(loggedInStaff.getId(), "Accessed Prescribe Medications", LocalDateTime.now()));
+                    } catch (SecurityException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Access Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 });
                 sidebar.add(prescribeMedButton);
 

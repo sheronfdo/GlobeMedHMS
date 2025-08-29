@@ -9,6 +9,7 @@ import com.jamith.globemedhms.application.services.staff.StaffServiceImpl;
 import com.jamith.globemedhms.core.entities.Appointment;
 import com.jamith.globemedhms.core.entities.Patient;
 import com.jamith.globemedhms.core.entities.Staff;
+import com.jamith.globemedhms.patterns.proxy.ResourceProxy;
 import com.jamith.globemedhms.presentation.controllers.AppointmentController;
 
 import javax.swing.*;
@@ -20,6 +21,7 @@ public class AppointmentView extends JPanel {
     private final AppointmentService service = new AppointmentServiceImpl();
     private final PatientService patientService = new PatientServiceImpl();
     private final StaffService staffService = new StaffServiceImpl();
+    private final ResourceProxy proxy = new ResourceProxy();
     private JList<Appointment> appointmentList;
     private JComboBox<Staff> staffComboBox;
     private JComboBox<Patient> patientComboBox;
@@ -27,12 +29,14 @@ public class AppointmentView extends JPanel {
     private JTextField timeField;
     private JComboBox<String> typeComboBox;
     private JTextArea treatmentArea;
-    private JTextField prescriptionField;
+    private JTextArea prescriptionArea;
     private JButton bookButton;
     private JButton cancelButton;
     private JButton completeButton;
+    private final Staff loggedInStaff;
 
     public AppointmentView(Staff loggedInStaff) {
+        this.loggedInStaff = loggedInStaff;
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -51,10 +55,10 @@ public class AppointmentView extends JPanel {
         detailsPanel.add(new JLabel("Patient:"));
         patientComboBox = new JComboBox<>(patientService.getAllPatients().toArray(new Patient[0]));
         detailsPanel.add(patientComboBox);
-        detailsPanel.add(new JLabel("Date:"));
+        detailsPanel.add(new JLabel("Date (YYYY-MM-DD):"));
         dateField = new JTextField(20);
         detailsPanel.add(dateField);
-        detailsPanel.add(new JLabel("Time:"));
+        detailsPanel.add(new JLabel("Time (HH:MM):"));
         timeField = new JTextField(20);
         detailsPanel.add(timeField);
         detailsPanel.add(new JLabel("Type:"));
@@ -64,11 +68,13 @@ public class AppointmentView extends JPanel {
         treatmentArea = new JTextArea(5, 20);
         detailsPanel.add(new JScrollPane(treatmentArea));
         detailsPanel.add(new JLabel("Prescription:"));
-        prescriptionField = new JTextField(20);
-        detailsPanel.add(prescriptionField);
+        prescriptionArea = new JTextArea(5, 20);
+        prescriptionArea.setEnabled(loggedInStaff.hasPermission("PRESCRIBE_MEDICATIONS"));
+        detailsPanel.add(new JScrollPane(prescriptionArea));
         bookButton = new JButton("Book Appointment");
         detailsPanel.add(bookButton);
         completeButton = new JButton("Complete Appointment");
+        completeButton.setEnabled(loggedInStaff.hasPermission("PRESCRIBE_MEDICATIONS"));
         detailsPanel.add(completeButton);
         add(detailsPanel, BorderLayout.CENTER);
 
@@ -86,7 +92,7 @@ public class AppointmentView extends JPanel {
                     timeField.setText(selectedAppointment.getTime());
                     typeComboBox.setSelectedItem(selectedAppointment.getType());
                     treatmentArea.setText(selectedAppointment.getTreatmentDetails());
-                    prescriptionField.setText(selectedAppointment.getPrescription());
+                    prescriptionArea.setText(selectedAppointment.getPrescription());
                 }
             }
         });
@@ -128,7 +134,7 @@ public class AppointmentView extends JPanel {
     }
 
     public String getPrescription() {
-        return prescriptionField.getText();
+        return prescriptionArea.getText();
     }
 
     public void addBookListener(ActionListener listener) {
