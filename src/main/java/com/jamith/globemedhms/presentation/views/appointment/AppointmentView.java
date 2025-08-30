@@ -33,6 +33,7 @@ public class AppointmentView extends JPanel {
     private JButton bookButton;
     private JButton cancelButton;
     private JButton completeButton;
+    private JButton undoButton;
     private final Staff loggedInStaff;
 
     public AppointmentView(Staff loggedInStaff) {
@@ -85,10 +86,14 @@ public class AppointmentView extends JPanel {
         detailsPanel.add(completeButton);
         add(detailsPanel, BorderLayout.CENTER);
 
+        JPanel buttonPanel = new JPanel(new FlowLayout());
         cancelButton = new JButton("Cancel Appointment");
         cancelButton.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
-        add(cancelButton, BorderLayout.SOUTH);
-
+        buttonPanel.add(cancelButton);
+        undoButton = new JButton("Undo");
+        undoButton.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
+        buttonPanel.add(undoButton);
+        add(buttonPanel, BorderLayout.SOUTH);
         // Listener for selecting appointment from list
         appointmentList.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -155,6 +160,10 @@ public class AppointmentView extends JPanel {
 
     public void addCompleteListener(ActionListener listener) {
         completeButton.addActionListener(listener);
+    }
+
+    public void addUndoListener(ActionListener listener) {
+        undoButton.addActionListener(listener);
     }
 
     public void showMessage(String message) {

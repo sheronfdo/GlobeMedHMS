@@ -8,6 +8,7 @@ import com.jamith.globemedhms.infrastructure.repository.AuditLogRepository;
 import com.jamith.globemedhms.patterns.proxy.ResourceProxy;
 import com.jamith.globemedhms.presentation.views.appointment.AppointmentView;
 import com.jamith.globemedhms.presentation.views.billing.BillingView;
+import com.jamith.globemedhms.presentation.views.logs.LogsView;
 import com.jamith.globemedhms.presentation.views.nurse.AdministerMedView;
 import com.jamith.globemedhms.presentation.views.patient.PatientView;
 import com.jamith.globemedhms.presentation.views.staff.StaffView;
