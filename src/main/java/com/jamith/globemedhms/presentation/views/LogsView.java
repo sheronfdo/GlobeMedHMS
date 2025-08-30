@@ -10,10 +10,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public class ReportView extends JPanel {
+public class LogsView extends JPanel {
     private final AuditLogRepository auditLogRepository = new AuditLogRepository();
 
-    public ReportView() {
+    public LogsView() {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 

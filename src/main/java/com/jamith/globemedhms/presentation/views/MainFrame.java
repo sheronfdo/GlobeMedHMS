@@ -183,6 +183,24 @@ public class MainFrame extends JFrame {
                 });
                 sidebar.add(viewReportsButton);
 
+
+                JButton viewLogsButton = new JButton("View Logs");
+                viewLogsButton.addActionListener(e -> {
+                    try {
+                        proxy.accessResource(loggedInStaff, "REPORTS", "GENERATE_REPORTS");
+                        LogsView logsView = new LogsView();
+                        contentPanel.add(logsView, "VIEW_REPORTS");
+                        ((CardLayout) contentPanel.getLayout()).show(contentPanel, "VIEW_REPORTS");
+                        contentPanel.revalidate();
+                        contentPanel.repaint();
+                        auditLogRepository.save(new AuditLog(loggedInStaff.getId(), "Accessed View Reports", LocalDateTime.now()));
+                    } catch (SecurityException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage(), "Access Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                });
+                sidebar.add(viewLogsButton);
+
+
                 JButton logoutButton = new JButton("Logout");
                 logoutButton.addActionListener(e -> {
                     auditLogRepository.save(new AuditLog(loggedInStaff.getId(), "Logged out", LocalDateTime.now()));
