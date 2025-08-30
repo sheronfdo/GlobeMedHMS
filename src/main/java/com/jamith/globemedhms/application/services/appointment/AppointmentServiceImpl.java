@@ -6,6 +6,7 @@ import com.jamith.globemedhms.core.entities.Appointment;
 import com.jamith.globemedhms.core.entities.Patient;
 import com.jamith.globemedhms.infrastructure.repository.AppointmentRepository;
 import com.jamith.globemedhms.patterns.decorator.EncryptionDecorator;
+import com.jamith.globemedhms.patterns.decorator.SanitizationDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,6 +34,12 @@ public class AppointmentServiceImpl implements AppointmentService {
                 throw new IllegalStateException("Conflict: Staff is already booked at this time.");
             }
         }
+        if (appointment.getTreatmentDetails() != null) {
+            appointment.setTreatmentDetails(EncryptionDecorator.encrypt(SanitizationDecorator.sanitize(appointment.getTreatmentDetails())));
+        }
+        if (appointment.getPrescription() != null) {
+            appointment.setPrescription(EncryptionDecorator.encrypt(SanitizationDecorator.sanitize(appointment.getPrescription())));
+        }
         appointmentRepository.saveOrUpdate(appointment);
     }
 
@@ -44,14 +51,13 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public void completeAppointment(Appointment appointment, String treatmentDetails, String prescription) {
         appointment.setStatus("COMPLETED");
-        appointment.setTreatmentDetails(treatmentDetails);
-        appointment.setPrescription(prescription);
+        appointment.setTreatmentDetails(EncryptionDecorator.encrypt(SanitizationDecorator.sanitize(treatmentDetails)));
+        appointment.setPrescription(EncryptionDecorator.encrypt(SanitizationDecorator.sanitize(prescription)));
         saveOrUpdateAppointment(appointment);
 
-        // Record in patient history
         Patient patient = appointment.getPatient();
         String historyEntry = "Appointment on " + appointment.getDate() + " at " + appointment.getTime() + " with " + appointment.getStaff().getName() + ". Treatment: " + treatmentDetails + ". Prescription: " + prescription;
-        patient.setMedicalHistory(EncryptionDecorator.encrypt(patient.getMedicalHistory() + "\n" + historyEntry));
+        patient.setMedicalHistory(EncryptionDecorator.encrypt(SanitizationDecorator.sanitize(patient.getMedicalHistory() + "\n" + historyEntry)));
         patientService.saveOrUpdatePatient(patient);
         logger.info("Appointment completed for patient: {}", patient.getName());
     }

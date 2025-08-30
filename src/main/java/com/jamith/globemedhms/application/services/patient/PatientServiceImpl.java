@@ -3,6 +3,7 @@ package com.jamith.globemedhms.application.services.patient;
 import com.jamith.globemedhms.core.entities.Patient;
 import com.jamith.globemedhms.infrastructure.repository.PatientRepository;
 import com.jamith.globemedhms.patterns.decorator.EncryptionDecorator;
+import com.jamith.globemedhms.patterns.decorator.SanitizationDecorator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,14 +22,17 @@ public class PatientServiceImpl implements PatientService {
     public void saveOrUpdatePatient(Patient patient) {
         try {
             // Encrypt sensitive fields before saving
+            if (patient.getName() != null) {
+                patient.setName(SanitizationDecorator.sanitize(patient.getName()));
+            }
             if (patient.getMedicalHistory() != null) {
-                patient.setMedicalHistory(EncryptionDecorator.encrypt(patient.getMedicalHistory()));
+                patient.setMedicalHistory(EncryptionDecorator.encrypt(SanitizationDecorator.sanitize(patient.getMedicalHistory())));
             }
             if (patient.getTreatmentPlan() != null) {
-                patient.setTreatmentPlan(EncryptionDecorator.encrypt(patient.getTreatmentPlan()));
+                patient.setTreatmentPlan(EncryptionDecorator.encrypt(SanitizationDecorator.sanitize(patient.getTreatmentPlan())));
             }
             if (patient.getHistory() != null) {
-                patient.setHistory(EncryptionDecorator.encrypt(patient.getHistory()));
+                patient.setHistory(EncryptionDecorator.encrypt(SanitizationDecorator.sanitize(patient.getHistory())));
             }
             patientRepository.saveOrUpdate(patient);
             logger.info("Saved/Updated patient: {}", patient.getName());
