@@ -4,6 +4,7 @@ import com.jamith.globemedhms.application.services.patient.PatientService;
 import com.jamith.globemedhms.application.services.patient.PatientServiceImpl;
 import com.jamith.globemedhms.core.entities.Patient;
 import com.jamith.globemedhms.core.entities.Staff;
+import com.jamith.globemedhms.patterns.builder.PatientBuilder;
 import com.jamith.globemedhms.patterns.decorator.EncryptionDecorator;
 import com.jamith.globemedhms.patterns.proxy.ResourceProxy;
 import com.jamith.globemedhms.presentation.views.patient.PatientView;
@@ -39,7 +40,13 @@ public class PatientController {
                 String medicalHistory = EncryptionDecorator.encrypt(view.getMedicalHistory()); // Decorator for security
                 String treatmentPlan = EncryptionDecorator.encrypt(view.getTreatmentPlan());
                 if (name != null && !name.isEmpty() && dob != null && !dob.isEmpty()) {
-                    Patient newPatient = new Patient(name, dob, address, medicalHistory, treatmentPlan);
+                    Patient newPatient = new PatientBuilder()
+                            .setName(name)
+                            .setDateOfBirth(dob)
+                            .setAddress(address)
+                            .setMedicalHistory(medicalHistory)
+                            .setTreatmentPlan(treatmentPlan)
+                            .build();
                     service.saveOrUpdatePatient(newPatient);
                     view.updatePatientList();
                     view.showMessage("Patient added successfully!");
@@ -65,12 +72,16 @@ public class PatientController {
                 proxy.accessResource(staff, "PATIENT_RECORDS", "UPDATE_PATIENT_RECORDS");
                 Patient selectedPatient = view.getSelectedPatient();
                 if (selectedPatient != null) {
-                    selectedPatient.setName(view.getName());
-                    selectedPatient.setDateOfBirth(view.getDateOfBirth());
-                    selectedPatient.setAddress(view.getAddress());
-                    selectedPatient.setMedicalHistory(EncryptionDecorator.encrypt(view.getMedicalHistory()));
-                    selectedPatient.setTreatmentPlan(EncryptionDecorator.encrypt(view.getTreatmentPlan()));
-                    service.saveOrUpdatePatient(selectedPatient);
+                    Patient updatedPatient = new PatientBuilder()
+                            .setName(view.getName())
+                            .setDateOfBirth(view.getDateOfBirth())
+                            .setAddress(view.getAddress())
+                            .setMedicalHistory(view.getMedicalHistory())
+                            .setTreatmentPlan(view.getTreatmentPlan())
+                            .setHistory(selectedPatient.getHistory()) // Preserve existing history
+                            .build();
+                    updatedPatient.setId(selectedPatient.getId());
+                    service.saveOrUpdatePatient(updatedPatient);
                     view.updatePatientList();
                     view.showMessage("Patient updated successfully!");
                 } else {

@@ -4,6 +4,7 @@ import com.jamith.globemedhms.application.services.patient.PatientService;
 import com.jamith.globemedhms.application.services.patient.PatientServiceImpl;
 import com.jamith.globemedhms.core.entities.Patient;
 import com.jamith.globemedhms.core.entities.Staff;
+import com.jamith.globemedhms.patterns.builder.PatientBuilder;
 import com.jamith.globemedhms.patterns.decorator.EncryptionDecorator;
 import com.jamith.globemedhms.patterns.proxy.ResourceProxy;
 import com.jamith.globemedhms.presentation.views.nurse.AdministerMedView;
@@ -48,8 +49,19 @@ public class AdministerMedController {
                 String historyEntry = String.format("Medication administered by %s on %s: %s, Dosage: %s, Notes: %s",
                         staff.getName(), LocalDateTime.now(), medication, dosage, notes);
                 String currentHistory = selectedPatient.getHistory() == null ? "" : EncryptionDecorator.decrypt(selectedPatient.getHistory());
-                selectedPatient.setHistory(EncryptionDecorator.encrypt(currentHistory + "\n" + historyEntry));
-                patientService.saveOrUpdatePatient(selectedPatient);
+
+                Patient updatedPatient = new PatientBuilder()
+                        .setName(selectedPatient.getName())
+                        .setDateOfBirth(selectedPatient.getDateOfBirth())
+                        .setAddress(selectedPatient.getAddress())
+                        .setMedicalHistory(EncryptionDecorator.decrypt(selectedPatient.getMedicalHistory()))
+                        .setTreatmentPlan(EncryptionDecorator.decrypt(selectedPatient.getTreatmentPlan()))
+                        .setHistory(currentHistory + "\n" + historyEntry)
+                        .build();
+
+                updatedPatient.setId(selectedPatient.getId());
+                patientService.saveOrUpdatePatient(updatedPatient);
+
                 view.updatePatientList();
                 view.showMessage("Medication administered and recorded successfully!");
             } catch (SecurityException ex) {

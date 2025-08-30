@@ -5,6 +5,7 @@ import com.jamith.globemedhms.application.services.patient.PatientServiceImpl;
 import com.jamith.globemedhms.core.entities.Appointment;
 import com.jamith.globemedhms.core.entities.Patient;
 import com.jamith.globemedhms.infrastructure.repository.AppointmentRepository;
+import com.jamith.globemedhms.patterns.builder.PatientBuilder;
 import com.jamith.globemedhms.patterns.decorator.EncryptionDecorator;
 import com.jamith.globemedhms.patterns.decorator.SanitizationDecorator;
 import org.apache.logging.log4j.LogManager;
@@ -57,8 +58,17 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Patient patient = appointment.getPatient();
         String historyEntry = "Appointment on " + appointment.getDate() + " at " + appointment.getTime() + " with " + appointment.getStaff().getName() + ". Treatment: " + treatmentDetails + ". Prescription: " + prescription;
-        patient.setMedicalHistory(EncryptionDecorator.encrypt(SanitizationDecorator.sanitize(patient.getMedicalHistory() + "\n" + historyEntry)));
-        patientService.saveOrUpdatePatient(patient);
+        String currentHistory = patient.getHistory() != null ? EncryptionDecorator.decrypt(patient.getHistory()) : "";
+        Patient updatedPatient = new PatientBuilder()
+                .setName(patient.getName())
+                .setDateOfBirth(patient.getDateOfBirth())
+                .setAddress(patient.getAddress())
+                .setMedicalHistory(patient.getMedicalHistory())
+                .setTreatmentPlan(patient.getTreatmentPlan())
+                .setHistory(currentHistory + "\n" + historyEntry)
+                .build();
+        updatedPatient.setId(patient.getId());
+        patientService.saveOrUpdatePatient(updatedPatient);
         logger.info("Appointment completed for patient: {}", patient.getName());
     }
 }

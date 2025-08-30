@@ -9,6 +9,8 @@ import com.jamith.globemedhms.core.entities.AuditLog;
 import com.jamith.globemedhms.core.entities.Patient;
 import com.jamith.globemedhms.core.entities.Staff;
 import com.jamith.globemedhms.infrastructure.repository.AuditLogRepository;
+import com.jamith.globemedhms.patterns.builder.PatientBuilder;
+import com.jamith.globemedhms.patterns.decorator.EncryptionDecorator;
 import com.jamith.globemedhms.presentation.views.pharmacist.DispenseMedView;
 import com.jamith.globemedhms.presentation.views.pharmacist.ViewPrescriptionsView;
 
@@ -55,8 +57,22 @@ public class PharmacistController {
                 if (prescription != null && !prescription.isEmpty()) {
                     Patient patient = selectedAppointment.getPatient();
                     String historyEntry = "Medication dispensed by " + loggedInStaff.getName() + " on " + LocalDateTime.now() + ": " + prescription;
-                    patient.appendHistory(historyEntry);
-                    patientService.saveOrUpdatePatient(patient);
+
+                    String currentHistory = patient.getHistory() != null ?
+                            EncryptionDecorator.decrypt(patient.getHistory()) : "";
+
+                    Patient updatedPatient = new PatientBuilder()
+                            .setName(patient.getName())
+                            .setDateOfBirth(patient.getDateOfBirth())
+                            .setAddress(patient.getAddress())
+                            .setMedicalHistory(EncryptionDecorator.decrypt(patient.getMedicalHistory()))
+                            .setTreatmentPlan(EncryptionDecorator.decrypt(patient.getTreatmentPlan()))
+                            .setHistory(currentHistory + "\n" + historyEntry)
+                            .build();
+
+                    updatedPatient.setId(patient.getId());
+                    patientService.saveOrUpdatePatient(updatedPatient);
+
                     dispenseMedView.showMessage("Medication dispensed successfully!");
                     dispenseMedView.updateAppointmentList();
                     auditLogRepository.save(new AuditLog(loggedInStaff.getId(), "Dispensed medication for appointment ID: " + selectedAppointment.getId(), LocalDateTime.now()));
