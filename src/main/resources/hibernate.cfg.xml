@@ -17,5 +17,7 @@
         <mapping class="com.jamith.globemedhms.core.entities.AuditLog"/>
         <mapping class="com.jamith.globemedhms.core.entities.Patient"/>
         <mapping class="com.jamith.globemedhms.core.entities.Appointment"/>
+        <mapping class="com.jamith.globemedhms.core.entities.Billing"/>
+        <mapping class="com.jamith.globemedhms.core.entities.InsuranceClaim"/>
     </session-factory>
 </hibernate-configuration>

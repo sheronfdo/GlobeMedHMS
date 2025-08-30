@@ -1,5 +1,6 @@
 package com.jamith.globemedhms.core.entities;
 
+import com.jamith.globemedhms.patterns.visitor.ReportVisitor;
 import jakarta.persistence.*;
 
 @Entity
@@ -61,5 +62,9 @@ public class Patient {
     @Override
     public String toString() {
         return name + " (ID: " + id + ")";
+    }
+
+    public String accept(ReportVisitor visitor) {
+        return visitor.visit(this);
     }
 }

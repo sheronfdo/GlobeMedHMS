@@ -13,7 +13,7 @@ import com.jamith.globemedhms.presentation.views.patient.PatientView;
 import com.jamith.globemedhms.presentation.views.staff.StaffView;
 import com.jamith.globemedhms.presentation.views.pharmacist.ViewPrescriptionsView;
 import com.jamith.globemedhms.presentation.views.pharmacist.DispenseMedView;
-
+import com.jamith.globemedhms.presentation.views.report.ReportView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -171,7 +171,7 @@ public class MainFrame extends JFrame {
                 viewReportsButton.addActionListener(e -> {
                     try {
                         proxy.accessResource(loggedInStaff, "REPORTS", "GENERATE_REPORTS");
-                        ReportView reportView = new ReportView();
+                        ReportView reportView = new ReportView(loggedInStaff);
                         contentPanel.add(reportView, "VIEW_REPORTS");
                         ((CardLayout) contentPanel.getLayout()).show(contentPanel, "VIEW_REPORTS");
                         contentPanel.revalidate();

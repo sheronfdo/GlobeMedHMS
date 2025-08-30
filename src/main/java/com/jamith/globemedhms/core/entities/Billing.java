@@ -1,5 +1,6 @@
 package com.jamith.globemedhms.core.entities;
 
+import com.jamith.globemedhms.patterns.visitor.ReportVisitor;
 import jakarta.persistence.*;
 
 @Entity
@@ -36,4 +37,8 @@ public class Billing {
     public void setAmount(double amount) { this.amount = amount; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public String accept(ReportVisitor visitor) {
+        return visitor.visit(this);
+    }
 }

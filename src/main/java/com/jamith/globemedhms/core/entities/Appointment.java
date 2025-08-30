@@ -1,5 +1,6 @@
 package com.jamith.globemedhms.core.entities;
 
+import com.jamith.globemedhms.patterns.visitor.ReportVisitor;
 import jakarta.persistence.*;
 
 @Entity
@@ -69,5 +70,9 @@ public class Appointment {
     @Override
     public String toString() {
         return "Appointment with " + staff.getName() + " on " + date + " at " + time;
+    }
+
+    public String accept(ReportVisitor visitor) {
+        return visitor.visit(this);
     }
 }
