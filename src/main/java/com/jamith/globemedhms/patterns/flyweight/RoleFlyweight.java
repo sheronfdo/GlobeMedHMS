@@ -11,18 +11,29 @@ public class RoleFlyweight {
         this.roleName = roleName;
         if ("DOCTOR".equals(roleName)) {
             permissions.add("VIEW_PATIENT_RECORDS");
+            permissions.add("UPDATE_PATIENT_RECORDS");
             permissions.add("UPDATE_TREATMENT_PLANS");
             permissions.add("PRESCRIBE_MEDICATIONS");
+            permissions.add("MANAGE_APPOINTMENTS");
         } else if ("NURSE".equals(roleName)) {
             permissions.add("VIEW_PATIENT_RECORDS");
+            permissions.add("UPDATE_PATIENT_RECORDS");
             permissions.add("ADMINISTER_MEDICATIONS");
+            permissions.add("MANAGE_APPOINTMENTS");
         } else if ("PHARMACIST".equals(roleName)) {
             permissions.add("VIEW_PRESCRIPTIONS");
             permissions.add("DISPENSE_MEDICATIONS");
+            permissions.add("MANAGE_BILLING");
+            permissions.add("PROCESS_CLAIMS");
         } else if ("ADMIN".equals(roleName)) {
             permissions.add("MANAGE_STAFF");
             permissions.add("VIEW_ALL_RECORDS");
             permissions.add("GENERATE_REPORTS");
+            permissions.add("VIEW_PATIENT_RECORDS");
+            permissions.add("UPDATE_PATIENT_RECORDS");
+            permissions.add("MANAGE_APPOINTMENTS");
+            permissions.add("MANAGE_BILLING");
+            permissions.add("PROCESS_CLAIMS");
         }
     }
 
