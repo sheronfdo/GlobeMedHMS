@@ -27,13 +27,11 @@ public class PatientView extends JPanel {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Patient list with scroll pane
         patientList = new JList<>();
         updatePatientList();
         JScrollPane patientListScroll = new JScrollPane(patientList);
         add(patientListScroll, BorderLayout.WEST);
 
-        // Right panel for patient details (GridLayout)
         JPanel detailsPanel = new JPanel(new GridLayout(6, 2, 5, 5));
         detailsPanel.setBorder(BorderFactory.createTitledBorder("Patient Details"));
         detailsPanel.add(new JLabel("Name:"));
@@ -57,7 +55,6 @@ public class PatientView extends JPanel {
         detailsPanel.add(updatePatientButton);
         add(detailsPanel, BorderLayout.CENTER);
 
-        // Listener for selecting patient from list
         patientList.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 Patient selectedPatient = patientList.getSelectedValue();

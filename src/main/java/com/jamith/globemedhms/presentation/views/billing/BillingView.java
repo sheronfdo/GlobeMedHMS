@@ -33,13 +33,11 @@ public class BillingView extends JPanel {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Appointment list for billing
         appointmentList = new JList<>();
         updateAppointmentList();
         JScrollPane appointmentListScroll = new JScrollPane(appointmentList);
         add(appointmentListScroll, BorderLayout.WEST);
 
-        // Right panel for billing details
         JPanel detailsPanel = new JPanel(new GridLayout(4, 2, 5, 5));
         detailsPanel.setBorder(BorderFactory.createTitledBorder("Billing and Claims"));
         detailsPanel.add(new JLabel("Amount:"));

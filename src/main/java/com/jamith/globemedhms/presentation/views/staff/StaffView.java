@@ -26,13 +26,11 @@ public class StaffView extends JPanel {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Staff list with scroll pane
         staffList = new JList<>();
         updateStaffList();
         JScrollPane staffListScroll = new JScrollPane(staffList);
         add(staffListScroll, BorderLayout.CENTER);
 
-        // Top panel for adding staff (GridLayout)
         JPanel addPanel = new JPanel(new GridLayout(4, 2, 5, 5));
         addPanel.setBorder(BorderFactory.createTitledBorder("Add New Staff"));
         addPanel.add(new JLabel("Name:"));
@@ -49,7 +47,6 @@ public class StaffView extends JPanel {
         addPanel.add(addStaffButton);
         add(addPanel, BorderLayout.NORTH);
 
-        // Bottom panel for role management and access testing (FlowLayout)
         JPanel rolePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
         rolePanel.setBorder(BorderFactory.createTitledBorder("Role Management"));
         rolePanel.add(new JLabel("Select Role:"));

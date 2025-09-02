@@ -18,7 +18,7 @@ public class Billing {
     private double amount;
 
     @Column(nullable = false)
-    private String status; // e.g., "PENDING", "PAID", "INSURED"
+    private String status;
 
     public Billing() {}
 
@@ -28,7 +28,6 @@ public class Billing {
         this.status = status;
     }
 
-    // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public Appointment getAppointment() { return appointment; }

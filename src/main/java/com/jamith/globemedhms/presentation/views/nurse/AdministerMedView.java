@@ -23,14 +23,12 @@ public class AdministerMedView extends JPanel {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Patient list with scroll pane
         patientList = new JList<>();
         updatePatientList();
         JScrollPane patientListScroll = new JScrollPane(patientList);
         patientListScroll.setPreferredSize(new Dimension(300, 0));
         add(patientListScroll, BorderLayout.WEST);
 
-        // Right panel for administration details
         JPanel detailsPanel = new JPanel(new GridBagLayout());
         detailsPanel.setBorder(BorderFactory.createTitledBorder("Administer Medications"));
         GridBagConstraints gbc = new GridBagConstraints();
@@ -67,7 +65,6 @@ public class AdministerMedView extends JPanel {
 
         add(detailsPanel, BorderLayout.CENTER);
 
-        // Listener for selecting patient
         patientList.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 Patient selectedPatient = patientList.getSelectedValue();

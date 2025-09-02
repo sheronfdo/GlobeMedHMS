@@ -25,10 +25,10 @@ public class Appointment {
     private String time;
 
     @Column(nullable = false)
-    private String type; // e.g., "CONSULTATION", "DIAGNOSTICS", "SURGERY"
+    private String type;
 
     @Column
-    private String status; // e.g., "SCHEDULED", "COMPLETED", "CANCELLED"
+    private String status;
 
     @Column(columnDefinition = "TEXT")
     private String prescription;
@@ -47,7 +47,6 @@ public class Appointment {
         this.status = status;
     }
 
-    // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public Staff getStaff() { return staff; }

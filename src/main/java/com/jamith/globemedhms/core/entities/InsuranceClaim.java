@@ -14,7 +14,7 @@ public class InsuranceClaim {
     private Billing billing;
 
     @Column(nullable = false)
-    private String status; // e.g., "PENDING", "APPROVED", "REJECTED"
+    private String status;
 
     public InsuranceClaim() {}
 
@@ -23,7 +23,6 @@ public class InsuranceClaim {
         this.status = status;
     }
 
-    // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public Billing getBilling() { return billing; }

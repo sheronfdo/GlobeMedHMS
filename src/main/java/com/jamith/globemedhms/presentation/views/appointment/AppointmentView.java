@@ -41,13 +41,11 @@ public class AppointmentView extends JPanel {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Appointment list with scroll pane
         appointmentList = new JList<>();
         updateAppointmentList(loggedInStaff);
         JScrollPane appointmentListScroll = new JScrollPane(appointmentList);
         add(appointmentListScroll, BorderLayout.WEST);
 
-        // Right panel for appointment details (GridLayout)
         JPanel detailsPanel = new JPanel(new GridLayout(8, 2, 5, 5));
         detailsPanel.setBorder(BorderFactory.createTitledBorder("Appointment Details"));
         detailsPanel.add(new JLabel("Staff:"));

@@ -6,7 +6,6 @@ public class ProcessPaymentHandler extends Handler {
     @Override
     public void handle(InsuranceClaim claim) {
         if (claim.getStatus().equals("APPROVED")) {
-            // Simulate payment processing
             claim.setStatus("PAID");
         }
         if (nextHandler != null) {

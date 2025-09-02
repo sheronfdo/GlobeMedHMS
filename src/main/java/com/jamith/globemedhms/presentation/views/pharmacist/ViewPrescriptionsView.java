@@ -21,13 +21,11 @@ public class ViewPrescriptionsView extends JPanel {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Appointment list with prescriptions
         appointmentList = new JList<>();
         updateAppointmentList();
         JScrollPane appointmentListScroll = new JScrollPane(appointmentList);
         add(appointmentListScroll, BorderLayout.WEST);
 
-        // Right panel for prescription details
         JPanel detailsPanel = new JPanel(new GridLayout(2, 1, 5, 5));
         detailsPanel.setBorder(BorderFactory.createTitledBorder("Prescription Details"));
         prescriptionArea = new JTextArea(5, 20);
@@ -37,7 +35,6 @@ public class ViewPrescriptionsView extends JPanel {
         detailsPanel.add(refreshButton);
         add(detailsPanel, BorderLayout.CENTER);
 
-        // Listener for selecting appointment
         appointmentList.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 Appointment selectedAppointment = appointmentList.getSelectedValue();

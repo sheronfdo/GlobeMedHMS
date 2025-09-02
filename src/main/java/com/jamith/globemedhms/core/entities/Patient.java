@@ -26,7 +26,7 @@ public class Patient {
     private String treatmentPlan;
 
     @Column(columnDefinition = "TEXT")
-    private String history; // For recording treatments and prescriptions
+    private String history;
 
     public Patient() {}
 
@@ -39,7 +39,6 @@ public class Patient {
         this.history = "";
     }
 
-    // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public String getName() { return name; }

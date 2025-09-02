@@ -35,7 +35,6 @@ public class ReportView extends JPanel {
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Selection panel
         JPanel selectionPanel = new JPanel(new GridLayout(3, 2, 5, 5));
         selectionPanel.setBorder(BorderFactory.createTitledBorder("Report Selection"));
         selectionPanel.add(new JLabel("Report Type:"));
@@ -49,13 +48,11 @@ public class ReportView extends JPanel {
         selectionPanel.add(generateReportButton);
         add(selectionPanel, BorderLayout.NORTH);
 
-        // Entity list
         entityList = new JList<>();
         updateEntityList();
         JScrollPane entityListScroll = new JScrollPane(entityList);
         add(entityListScroll, BorderLayout.WEST);
 
-        // Report output
         reportOutput = new JTextArea(20, 40);
         reportOutput.setEditable(false);
         JScrollPane outputScroll = new JScrollPane(reportOutput);

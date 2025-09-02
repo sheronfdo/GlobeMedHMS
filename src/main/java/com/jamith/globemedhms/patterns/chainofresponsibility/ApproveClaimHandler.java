@@ -6,7 +6,6 @@ public class ApproveClaimHandler extends Handler {
     @Override
     public void handle(InsuranceClaim claim) {
         if (claim.getStatus().equals("ELIGIBLE")) {
-            // Simulate approval
             claim.setStatus("APPROVED");
         } else {
             claim.setStatus("REJECTED");
