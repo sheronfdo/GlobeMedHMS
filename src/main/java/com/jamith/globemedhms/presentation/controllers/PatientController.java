@@ -37,8 +37,8 @@ public class PatientController {
                 String name = view.getName();
                 String dob = view.getDateOfBirth();
                 String address = view.getAddress();
-                String medicalHistory = EncryptionDecorator.encrypt(view.getMedicalHistory()); // Decorator for security
-                String treatmentPlan = EncryptionDecorator.encrypt(view.getTreatmentPlan());
+                String medicalHistory = view.getMedicalHistory(); // Decorator for security
+                String treatmentPlan = view.getTreatmentPlan();
                 if (name != null && !name.isEmpty() && dob != null && !dob.isEmpty()) {
                     Patient newPatient = new PatientBuilder()
                             .setName(name)

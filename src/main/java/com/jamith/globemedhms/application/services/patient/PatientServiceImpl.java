@@ -21,6 +21,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public void saveOrUpdatePatient(Patient patient) {
         try {
+            System.out.println(patient.getMedicalHistory() + " "+patient.getTreatmentPlan());
             // Encrypt sensitive fields before saving
             if (patient.getName() != null) {
                 patient.setName(SanitizationDecorator.sanitize(patient.getName()));

@@ -4,6 +4,7 @@ import com.jamith.globemedhms.application.services.patient.PatientService;
 import com.jamith.globemedhms.application.services.patient.PatientServiceImpl;
 import com.jamith.globemedhms.core.entities.Appointment;
 import com.jamith.globemedhms.core.entities.Patient;
+import com.jamith.globemedhms.core.entities.Staff;
 import com.jamith.globemedhms.infrastructure.repository.AppointmentRepository;
 import com.jamith.globemedhms.patterns.builder.PatientBuilder;
 import com.jamith.globemedhms.patterns.decorator.EncryptionDecorator;
@@ -24,8 +25,12 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<Appointment> getAppointmentsByStaff(int staffId) {
-        return appointmentRepository.getAppointmentsByStaff(staffId);
+    public List<Appointment> getAppointmentsByStaff(Staff staffId) {
+        if (staffId.getRole().equals("ADMIN")) {
+            return appointmentRepository.getAllAppointments();
+        } else {
+            return appointmentRepository.getAppointmentsByStaff(staffId.getId());
+        }
     }
 
     @Override

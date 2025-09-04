@@ -112,7 +112,7 @@ public class AppointmentView extends JPanel {
     }
 
     public void updateAppointmentList(Staff staff) {
-        List<Appointment> appointments = service.getAppointmentsByStaff(staff.getId());
+        List<Appointment> appointments = service.getAppointmentsByStaff(staff);
         appointmentList.setListData(appointments.toArray(new Appointment[0]));
     }
 

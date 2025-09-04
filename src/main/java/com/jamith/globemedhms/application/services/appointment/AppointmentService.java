@@ -1,12 +1,13 @@
 package com.jamith.globemedhms.application.services.appointment;
 
 import com.jamith.globemedhms.core.entities.Appointment;
+import com.jamith.globemedhms.core.entities.Staff;
 
 import java.util.List;
 
 public interface AppointmentService {
     List<Appointment> getAllAppointments();
-    List<Appointment> getAppointmentsByStaff(int staffId);
+    List<Appointment> getAppointmentsByStaff(Staff staff);
     void saveOrUpdateAppointment(Appointment appointment);
     boolean hasConflict(int staffId, String date, String time);
     void completeAppointment(Appointment appointment, String treatmentDetails, String prescription);

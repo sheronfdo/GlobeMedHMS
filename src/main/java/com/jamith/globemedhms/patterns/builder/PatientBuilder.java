@@ -28,17 +28,17 @@ public class PatientBuilder {
     }
 
     public PatientBuilder setMedicalHistory(String medicalHistory) {
-        this.medicalHistory = medicalHistory != null ? EncryptionDecorator.encrypt(SanitizationDecorator.sanitize(medicalHistory)) : null;
+        this.medicalHistory = medicalHistory;
         return this;
     }
 
     public PatientBuilder setTreatmentPlan(String treatmentPlan) {
-        this.treatmentPlan = treatmentPlan != null ? EncryptionDecorator.encrypt(SanitizationDecorator.sanitize(treatmentPlan)) : null;
+        this.treatmentPlan = treatmentPlan;
         return this;
     }
 
     public PatientBuilder setHistory(String history) {
-        this.history = history != null ? EncryptionDecorator.encrypt(SanitizationDecorator.sanitize(history)) : "";
+        this.history = history;
         return this;
     }
 

@@ -14,7 +14,7 @@ public class AppointmentRepository {
 
     public List<Appointment> getAllAppointments() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Appointment> query = session.createQuery("FROM Appointment", Appointment.class);
+            Query<Appointment> query = session.createQuery("FROM Appointment WHERE status!='CANCELLED'", Appointment.class);
             return query.getResultList();
         } catch (Exception e) {
             logger.error("Error fetching appointments", e);
@@ -24,7 +24,7 @@ public class AppointmentRepository {
 
     public List<Appointment> getAppointmentsByStaff(int staffId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Appointment> query = session.createQuery("FROM Appointment WHERE staff.id = :staffId", Appointment.class);
+            Query<Appointment> query = session.createQuery("FROM Appointment WHERE staff.id = :staffId and status!='CANCELLED'", Appointment.class);
             query.setParameter("staffId", staffId);
             return query.getResultList();
         } catch (Exception e) {
