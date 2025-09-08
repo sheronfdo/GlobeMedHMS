@@ -57,8 +57,8 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public void completeAppointment(Appointment appointment, String treatmentDetails, String prescription) {
         appointment.setStatus("COMPLETED");
-        appointment.setTreatmentDetails(EncryptionDecorator.encrypt(SanitizationDecorator.sanitize(treatmentDetails)));
-        appointment.setPrescription(EncryptionDecorator.encrypt(SanitizationDecorator.sanitize(prescription)));
+        appointment.setTreatmentDetails((SanitizationDecorator.sanitize(treatmentDetails)));
+        appointment.setPrescription((SanitizationDecorator.sanitize(prescription)));
         saveOrUpdateAppointment(appointment);
 
         Patient patient = appointment.getPatient();
@@ -68,11 +68,12 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .setName(patient.getName())
                 .setDateOfBirth(patient.getDateOfBirth())
                 .setAddress(patient.getAddress())
-                .setMedicalHistory(patient.getMedicalHistory())
-                .setTreatmentPlan(patient.getTreatmentPlan())
+                .setMedicalHistory(EncryptionDecorator.decrypt(patient.getMedicalHistory()))
+                .setTreatmentPlan(EncryptionDecorator.decrypt(patient.getTreatmentPlan()))
                 .setHistory(currentHistory + "\n" + historyEntry)
                 .build();
         updatedPatient.setId(patient.getId());
+        System.out.println("Updated Patient ID: " + updatedPatient);
         patientService.saveOrUpdatePatient(updatedPatient);
         logger.info("Appointment completed for patient: {}", patient.getName());
     }

@@ -9,6 +9,7 @@ import com.jamith.globemedhms.application.services.staff.StaffServiceImpl;
 import com.jamith.globemedhms.core.entities.Appointment;
 import com.jamith.globemedhms.core.entities.Patient;
 import com.jamith.globemedhms.core.entities.Staff;
+import com.jamith.globemedhms.patterns.decorator.EncryptionDecorator;
 import com.jamith.globemedhms.patterns.proxy.ResourceProxy;
 import com.jamith.globemedhms.presentation.controllers.AppointmentController;
 
@@ -102,8 +103,8 @@ public class AppointmentView extends JPanel {
                     dateField.setText(selectedAppointment.getDate());
                     timeField.setText(selectedAppointment.getTime());
                     typeComboBox.setSelectedItem(selectedAppointment.getType());
-                    treatmentArea.setText(selectedAppointment.getTreatmentDetails());
-                    prescriptionArea.setText(selectedAppointment.getPrescription());
+                    treatmentArea.setText(EncryptionDecorator.decrypt(selectedAppointment.getTreatmentDetails()));
+                    prescriptionArea.setText(EncryptionDecorator.decrypt(selectedAppointment.getPrescription()));
                 }
             }
         });

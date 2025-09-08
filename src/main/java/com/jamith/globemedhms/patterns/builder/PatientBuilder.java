@@ -1,7 +1,6 @@
 package com.jamith.globemedhms.patterns.builder;
 
 import com.jamith.globemedhms.core.entities.Patient;
-import com.jamith.globemedhms.patterns.decorator.EncryptionDecorator;
 import com.jamith.globemedhms.patterns.decorator.SanitizationDecorator;
 
 public class PatientBuilder {

@@ -74,10 +74,13 @@ public class AppointmentController {
             try {
                 proxy.accessResource(loggedInStaff, "PRESCRIPTION", "PRESCRIBE_MEDICATIONS");
                 Appointment selectedAppointment = view.getSelectedAppointment();
+                System.out.println("selectedAppointment : " + selectedAppointment);
                 if (selectedAppointment != null) {
                     caretaker.save(new AppointmentMemento(selectedAppointment)); // Save state
                     String treatmentDetails = view.getTreatmentDetails();
                     String prescription = view.getPrescription();
+                    System.out.println("prescription : " + prescription);
+                    System.out.println("treatment details : " + treatmentDetails);
                     if (prescription == null || prescription.trim().isEmpty()) {
                         view.showMessage("Prescription cannot be empty for completion.");
                         return;
