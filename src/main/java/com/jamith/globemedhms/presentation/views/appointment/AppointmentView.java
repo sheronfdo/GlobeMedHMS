@@ -14,6 +14,8 @@ import com.jamith.globemedhms.patterns.proxy.ResourceProxy;
 import com.jamith.globemedhms.presentation.controllers.AppointmentController;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -38,62 +40,207 @@ public class AppointmentView extends JPanel {
     private final Staff loggedInStaff;
 
     public AppointmentView(Staff loggedInStaff) {
-        this.loggedInStaff = loggedInStaff;
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+//        this.loggedInStaff = loggedInStaff;
+//        setLayout(new BorderLayout(10, 10));
+//        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+//
+//        appointmentList = new JList<>();
+//        updateAppointmentList(loggedInStaff);
+//        JScrollPane appointmentListScroll = new JScrollPane(appointmentList);
+//        add(appointmentListScroll, BorderLayout.WEST);
+//
+//        JPanel detailsPanel = new JPanel(new GridLayout(8, 2, 5, 5));
+//        detailsPanel.setBorder(BorderFactory.createTitledBorder("Appointment Details"));
+//        detailsPanel.add(new JLabel("Staff:"));
+//        staffComboBox = new JComboBox<>(staffService.getAllStaff().toArray(new Staff[0]));
+//        staffComboBox.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
+//        detailsPanel.add(staffComboBox);
+//        detailsPanel.add(new JLabel("Patient:"));
+//        patientComboBox = new JComboBox<>(patientService.getAllPatients().toArray(new Patient[0]));
+//        patientComboBox.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
+//        detailsPanel.add(patientComboBox);
+//        detailsPanel.add(new JLabel("Date (YYYY-MM-DD):"));
+//        dateField = new JTextField(20);
+//        dateField.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
+//        detailsPanel.add(dateField);
+//        detailsPanel.add(new JLabel("Time (HH:MM):"));
+//        timeField = new JTextField(20);
+//        timeField.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
+//        detailsPanel.add(timeField);
+//        detailsPanel.add(new JLabel("Type:"));
+//        typeComboBox = new JComboBox<>(new String[]{"CONSULTATION", "DIAGNOSTICS", "SURGERY"});
+//        typeComboBox.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
+//        detailsPanel.add(typeComboBox);
+//        detailsPanel.add(new JLabel("Treatment Details:"));
+//        treatmentArea = new JTextArea(5, 20);
+//        treatmentArea.setEnabled(loggedInStaff.hasPermission("PRESCRIBE_MEDICATIONS"));
+//        detailsPanel.add(new JScrollPane(treatmentArea));
+//        detailsPanel.add(new JLabel("Prescription:"));
+//        prescriptionArea = new JTextArea(5, 20);
+//        prescriptionArea.setEnabled(loggedInStaff.hasPermission("PRESCRIBE_MEDICATIONS"));
+//        detailsPanel.add(new JScrollPane(prescriptionArea));
+//        bookButton = new JButton("Book Appointment");
+//        bookButton.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
+//        detailsPanel.add(bookButton);
+//        completeButton = new JButton("Complete Appointment");
+//        completeButton.setEnabled(loggedInStaff.hasPermission("PRESCRIBE_MEDICATIONS"));
+//        detailsPanel.add(completeButton);
+//        add(detailsPanel, BorderLayout.CENTER);
+//
+//        JPanel buttonPanel = new JPanel(new FlowLayout());
+//        cancelButton = new JButton("Cancel Appointment");
+//        cancelButton.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
+//        buttonPanel.add(cancelButton);
+//        undoButton = new JButton("Undo");
+//        undoButton.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
+//        buttonPanel.add(undoButton);
+//        add(buttonPanel, BorderLayout.SOUTH);
+//        // Listener for selecting appointment from list
+//        appointmentList.addListSelectionListener(e -> {
+//            if (!e.getValueIsAdjusting()) {
+//                Appointment selectedAppointment = appointmentList.getSelectedValue();
+//                if (selectedAppointment != null) {
+//                    staffComboBox.setSelectedItem(selectedAppointment.getStaff());
+//                    patientComboBox.setSelectedItem(selectedAppointment.getPatient());
+//                    dateField.setText(selectedAppointment.getDate());
+//                    timeField.setText(selectedAppointment.getTime());
+//                    typeComboBox.setSelectedItem(selectedAppointment.getType());
+//                    treatmentArea.setText(EncryptionDecorator.decrypt(selectedAppointment.getTreatmentDetails()));
+//                    prescriptionArea.setText(EncryptionDecorator.decrypt(selectedAppointment.getPrescription()));
+//                }
+//            }
+//        });
+//
+//        new AppointmentController(this, loggedInStaff);
 
+
+
+        this.loggedInStaff = loggedInStaff;
+        setLayout(new BorderLayout(15, 15));
+        setBorder(new EmptyBorder(15, 15, 15, 15));
+
+        // Left panel: Appointment list
         appointmentList = new JList<>();
         updateAppointmentList(loggedInStaff);
+        appointmentList.setBorder(new LineBorder(new Color(180, 180, 180), 1, true));
+        appointmentList.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        appointmentList.setSelectionBackground(new Color(100, 149, 237));
         JScrollPane appointmentListScroll = new JScrollPane(appointmentList);
+        appointmentListScroll.setBorder(BorderFactory.createTitledBorder("Appointments"));
+        appointmentListScroll.setPreferredSize(new Dimension(220, 0));
         add(appointmentListScroll, BorderLayout.WEST);
 
-        JPanel detailsPanel = new JPanel(new GridLayout(8, 2, 5, 5));
+        // Center panel: Details
+        JPanel detailsPanel = new JPanel(new GridBagLayout());
         detailsPanel.setBorder(BorderFactory.createTitledBorder("Appointment Details"));
-        detailsPanel.add(new JLabel("Staff:"));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(6, 6, 6, 6);
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+
+        // Staff
+        detailsPanel.add(new JLabel("Staff:"), gbc);
+        gbc.gridx++;
         staffComboBox = new JComboBox<>(staffService.getAllStaff().toArray(new Staff[0]));
         staffComboBox.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
-        detailsPanel.add(staffComboBox);
-        detailsPanel.add(new JLabel("Patient:"));
+        detailsPanel.add(staffComboBox, gbc);
+
+        // Patient
+        gbc.gridx = 0; gbc.gridy++;
+        detailsPanel.add(new JLabel("Patient:"), gbc);
+        gbc.gridx++;
         patientComboBox = new JComboBox<>(patientService.getAllPatients().toArray(new Patient[0]));
         patientComboBox.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
-        detailsPanel.add(patientComboBox);
-        detailsPanel.add(new JLabel("Date (YYYY-MM-DD):"));
-        dateField = new JTextField(20);
+        detailsPanel.add(patientComboBox, gbc);
+
+        // Date
+        gbc.gridx = 0; gbc.gridy++;
+        detailsPanel.add(new JLabel("Date (YYYY-MM-DD):"), gbc);
+        gbc.gridx++;
+        dateField = new JTextField(15);
         dateField.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
-        detailsPanel.add(dateField);
-        detailsPanel.add(new JLabel("Time (HH:MM):"));
-        timeField = new JTextField(20);
+        detailsPanel.add(dateField, gbc);
+
+        // Time
+        gbc.gridx = 0; gbc.gridy++;
+        detailsPanel.add(new JLabel("Time (HH:MM):"), gbc);
+        gbc.gridx++;
+        timeField = new JTextField(15);
         timeField.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
-        detailsPanel.add(timeField);
-        detailsPanel.add(new JLabel("Type:"));
+        detailsPanel.add(timeField, gbc);
+
+        // Type
+        gbc.gridx = 0; gbc.gridy++;
+        detailsPanel.add(new JLabel("Type:"), gbc);
+        gbc.gridx++;
         typeComboBox = new JComboBox<>(new String[]{"CONSULTATION", "DIAGNOSTICS", "SURGERY"});
         typeComboBox.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
-        detailsPanel.add(typeComboBox);
-        detailsPanel.add(new JLabel("Treatment Details:"));
-        treatmentArea = new JTextArea(5, 20);
+        detailsPanel.add(typeComboBox, gbc);
+
+        // Treatment
+        gbc.gridx = 0; gbc.gridy++;
+        detailsPanel.add(new JLabel("Treatment Details:"), gbc);
+        gbc.gridx++;
+        treatmentArea = new JTextArea(4, 15);
+        treatmentArea.setLineWrap(true);
+        treatmentArea.setWrapStyleWord(true);
+        treatmentArea.setBorder(new LineBorder(Color.GRAY, 1));
         treatmentArea.setEnabled(loggedInStaff.hasPermission("PRESCRIBE_MEDICATIONS"));
-        detailsPanel.add(new JScrollPane(treatmentArea));
-        detailsPanel.add(new JLabel("Prescription:"));
-        prescriptionArea = new JTextArea(5, 20);
+        detailsPanel.add(new JScrollPane(treatmentArea), gbc);
+
+        // Prescription
+        gbc.gridx = 0; gbc.gridy++;
+        detailsPanel.add(new JLabel("Prescription:"), gbc);
+        gbc.gridx++;
+        prescriptionArea = new JTextArea(4, 15);
+        prescriptionArea.setLineWrap(true);
+        prescriptionArea.setWrapStyleWord(true);
+        prescriptionArea.setBorder(new LineBorder(Color.GRAY, 1));
         prescriptionArea.setEnabled(loggedInStaff.hasPermission("PRESCRIBE_MEDICATIONS"));
-        detailsPanel.add(new JScrollPane(prescriptionArea));
+        detailsPanel.add(new JScrollPane(prescriptionArea), gbc);
+
+        // Action buttons (book + complete)
+        gbc.gridx = 0; gbc.gridy++;
+        gbc.gridwidth = 2;
+        JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
         bookButton = new JButton("Book Appointment");
+        bookButton.setBackground(new Color(60, 179, 113));
+        bookButton.setForeground(Color.WHITE);
+        bookButton.setFocusPainted(false);
         bookButton.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
-        detailsPanel.add(bookButton);
+        actionPanel.add(bookButton);
+
         completeButton = new JButton("Complete Appointment");
+        completeButton.setBackground(new Color(100, 149, 237));
+        completeButton.setForeground(Color.WHITE);
+        completeButton.setFocusPainted(false);
         completeButton.setEnabled(loggedInStaff.hasPermission("PRESCRIBE_MEDICATIONS"));
-        detailsPanel.add(completeButton);
+        actionPanel.add(completeButton);
+
+        detailsPanel.add(actionPanel, gbc);
         add(detailsPanel, BorderLayout.CENTER);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout());
+        // Bottom buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
         cancelButton = new JButton("Cancel Appointment");
+        cancelButton.setBackground(new Color(220, 20, 60));
+        cancelButton.setForeground(Color.WHITE);
+        cancelButton.setFocusPainted(false);
         cancelButton.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
         buttonPanel.add(cancelButton);
+
         undoButton = new JButton("Undo");
+        undoButton.setBackground(new Color(255, 165, 0));
+        undoButton.setForeground(Color.WHITE);
+        undoButton.setFocusPainted(false);
         undoButton.setEnabled(loggedInStaff.hasPermission("UPDATE_PATIENT_RECORDS"));
         buttonPanel.add(undoButton);
+
         add(buttonPanel, BorderLayout.SOUTH);
-        // Listener for selecting appointment from list
+
+        // Listener for selecting appointment
         appointmentList.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 Appointment selectedAppointment = appointmentList.getSelectedValue();

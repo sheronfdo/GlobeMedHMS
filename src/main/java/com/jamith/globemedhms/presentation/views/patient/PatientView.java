@@ -8,6 +8,8 @@ import com.jamith.globemedhms.patterns.decorator.EncryptionDecorator;
 import com.jamith.globemedhms.presentation.controllers.PatientController;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -24,37 +26,137 @@ public class PatientView extends JPanel {
     private JButton updatePatientButton;
 
     public PatientView(Staff loggedInStaff) {
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+//        setLayout(new BorderLayout(10, 10));
+//        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+//
+//        patientList = new JList<>();
+//        updatePatientList();
+//        JScrollPane patientListScroll = new JScrollPane(patientList);
+//        add(patientListScroll, BorderLayout.WEST);
+//
+//        JPanel detailsPanel = new JPanel(new GridLayout(6, 2, 5, 5));
+//        detailsPanel.setBorder(BorderFactory.createTitledBorder("Patient Details"));
+//        detailsPanel.add(new JLabel("Name:"));
+//        nameField = new JTextField(20);
+//        detailsPanel.add(nameField);
+//        detailsPanel.add(new JLabel("Date of Birth:"));
+//        dobField = new JTextField(20);
+//        detailsPanel.add(dobField);
+//        detailsPanel.add(new JLabel("Address:"));
+//        addressField = new JTextField(20);
+//        detailsPanel.add(addressField);
+//        detailsPanel.add(new JLabel("Medical History:"));
+//        medicalHistoryArea = new JTextArea(5, 20);
+//        detailsPanel.add(new JScrollPane(medicalHistoryArea));
+//        detailsPanel.add(new JLabel("Treatment Plan:"));
+//        treatmentPlanArea = new JTextArea(5, 20);
+//        detailsPanel.add(new JScrollPane(treatmentPlanArea));
+//        addPatientButton = new JButton("Add Patient");
+//        detailsPanel.add(addPatientButton);
+//        updatePatientButton = new JButton("Update Patient");
+//        detailsPanel.add(updatePatientButton);
+//        add(detailsPanel, BorderLayout.CENTER);
+//
+//        patientList.addListSelectionListener(e -> {
+//            if (!e.getValueIsAdjusting()) {
+//                Patient selectedPatient = patientList.getSelectedValue();
+//                if (selectedPatient != null) {
+//                    nameField.setText(selectedPatient.getName());
+//                    dobField.setText(selectedPatient.getDateOfBirth());
+//                    addressField.setText(selectedPatient.getAddress());
+//                    medicalHistoryArea.setText(EncryptionDecorator.decrypt(selectedPatient.getMedicalHistory()));
+//                    treatmentPlanArea.setText(EncryptionDecorator.decrypt(selectedPatient.getTreatmentPlan()));
+//                }
+//            }
+//        });
+//        new PatientController(this, loggedInStaff);
 
+
+
+        setLayout(new BorderLayout(15, 15));
+        setBorder(new EmptyBorder(15, 15, 15, 15));
+
+        // Left: Patient List
         patientList = new JList<>();
         updatePatientList();
+        patientList.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        patientList.setBorder(new LineBorder(new Color(180, 180, 180), 1, true));
+        patientList.setSelectionBackground(new Color(100, 149, 237));
         JScrollPane patientListScroll = new JScrollPane(patientList);
+        patientListScroll.setBorder(BorderFactory.createTitledBorder("Patients"));
+        patientListScroll.setPreferredSize(new Dimension(220, 0));
         add(patientListScroll, BorderLayout.WEST);
 
-        JPanel detailsPanel = new JPanel(new GridLayout(6, 2, 5, 5));
+        // Center: Patient Details Form
+        JPanel detailsPanel = new JPanel(new GridBagLayout());
         detailsPanel.setBorder(BorderFactory.createTitledBorder("Patient Details"));
-        detailsPanel.add(new JLabel("Name:"));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(8, 8, 8, 8);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.WEST;
+
+        // Name
+        gbc.gridx = 0; gbc.gridy = 0;
+        detailsPanel.add(new JLabel("Name:"), gbc);
+        gbc.gridx++;
         nameField = new JTextField(20);
-        detailsPanel.add(nameField);
-        detailsPanel.add(new JLabel("Date of Birth:"));
+        nameField.setBorder(new LineBorder(Color.GRAY, 1));
+        detailsPanel.add(nameField, gbc);
+
+        // Date of Birth
+        gbc.gridx = 0; gbc.gridy++;
+        detailsPanel.add(new JLabel("Date of Birth:"), gbc);
+        gbc.gridx++;
         dobField = new JTextField(20);
-        detailsPanel.add(dobField);
-        detailsPanel.add(new JLabel("Address:"));
+        dobField.setBorder(new LineBorder(Color.GRAY, 1));
+        detailsPanel.add(dobField, gbc);
+
+        // Address
+        gbc.gridx = 0; gbc.gridy++;
+        detailsPanel.add(new JLabel("Address:"), gbc);
+        gbc.gridx++;
         addressField = new JTextField(20);
-        detailsPanel.add(addressField);
-        detailsPanel.add(new JLabel("Medical History:"));
+        addressField.setBorder(new LineBorder(Color.GRAY, 1));
+        detailsPanel.add(addressField, gbc);
+
+        // Medical History
+        gbc.gridx = 0; gbc.gridy++;
+        detailsPanel.add(new JLabel("Medical History:"), gbc);
+        gbc.gridx++;
         medicalHistoryArea = new JTextArea(5, 20);
-        detailsPanel.add(new JScrollPane(medicalHistoryArea));
-        detailsPanel.add(new JLabel("Treatment Plan:"));
+        medicalHistoryArea.setBorder(new LineBorder(Color.LIGHT_GRAY, 1));
+        detailsPanel.add(new JScrollPane(medicalHistoryArea), gbc);
+
+        // Treatment Plan
+        gbc.gridx = 0; gbc.gridy++;
+        detailsPanel.add(new JLabel("Treatment Plan:"), gbc);
+        gbc.gridx++;
         treatmentPlanArea = new JTextArea(5, 20);
-        detailsPanel.add(new JScrollPane(treatmentPlanArea));
+        treatmentPlanArea.setBorder(new LineBorder(Color.LIGHT_GRAY, 1));
+        detailsPanel.add(new JScrollPane(treatmentPlanArea), gbc);
+
+        // Buttons
+        gbc.gridx = 0; gbc.gridy++;
+        gbc.gridwidth = 2;
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+
         addPatientButton = new JButton("Add Patient");
-        detailsPanel.add(addPatientButton);
+        addPatientButton.setBackground(new Color(60, 179, 113));
+        addPatientButton.setForeground(Color.WHITE);
+        addPatientButton.setFocusPainted(false);
+        buttonPanel.add(addPatientButton);
+
         updatePatientButton = new JButton("Update Patient");
-        detailsPanel.add(updatePatientButton);
+        updatePatientButton.setBackground(new Color(65, 105, 225));
+        updatePatientButton.setForeground(Color.WHITE);
+        updatePatientButton.setFocusPainted(false);
+        buttonPanel.add(updatePatientButton);
+
+        detailsPanel.add(buttonPanel, gbc);
+
         add(detailsPanel, BorderLayout.CENTER);
 
+        // Patient selection listener
         patientList.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 Patient selectedPatient = patientList.getSelectedValue();
@@ -67,7 +169,9 @@ public class PatientView extends JPanel {
                 }
             }
         });
+
         new PatientController(this, loggedInStaff);
+
     }
 
     public void updatePatientList() {
