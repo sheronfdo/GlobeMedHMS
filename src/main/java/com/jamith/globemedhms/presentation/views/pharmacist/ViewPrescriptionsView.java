@@ -4,6 +4,7 @@ import com.jamith.globemedhms.application.services.appointment.AppointmentServic
 import com.jamith.globemedhms.application.services.appointment.AppointmentServiceImpl;
 import com.jamith.globemedhms.core.entities.Appointment;
 import com.jamith.globemedhms.core.entities.Staff;
+import com.jamith.globemedhms.patterns.decorator.EncryptionDecorator;
 import com.jamith.globemedhms.presentation.controllers.PharmacistController;
 
 import javax.swing.*;
@@ -98,7 +99,7 @@ public class ViewPrescriptionsView extends JPanel {
             if (!e.getValueIsAdjusting()) {
                 Appointment selectedAppointment = appointmentList.getSelectedValue();
                 if (selectedAppointment != null) {
-                    prescriptionArea.setText(selectedAppointment.getPrescription());
+                    prescriptionArea.setText(EncryptionDecorator.decrypt(selectedAppointment.getPrescription()));
                 }
             }
         });
