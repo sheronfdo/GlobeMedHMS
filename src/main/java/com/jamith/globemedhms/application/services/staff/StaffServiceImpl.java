@@ -68,8 +68,8 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public void revokeRole(Staff staff, String roleName) {
-        staff.getRoles().removeIf(r -> r.getClass().getSimpleName().equalsIgnoreCase(roleName + "Role"));
-        staff.setRole(staff.getRoles().isEmpty() ? "UNKNOWN" : staff.getRoles().get(0).getClass().getSimpleName().replace("Role", "").toUpperCase());
+        staff.getRoles().removeIf(r -> r.getClass().getSimpleName().equalsIgnoreCase(roleName));
+        staff.setRole("UNKNOWN"); // staff.getRoles().isEmpty() ? "UNKNOWN" : staff.getRoles().get(0).getClass().getSimpleName().replace("Role", "").toUpperCase()
         saveOrUpdateStaff(staff);
         logger.info("Revoked role {} from staff {}", roleName, staff.getUsername());
     }

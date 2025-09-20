@@ -371,8 +371,6 @@ import java.time.LocalDateTime;
 //}
 
 
-
-
 public class MainFrame extends JFrame {
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel mainPanel = new JPanel(cardLayout);
@@ -393,23 +391,71 @@ public class MainFrame extends JFrame {
         setVisible(true);
     }
 
-    /** ================== LOGIN ================== **/
+    /**
+     * ================== LOGIN ==================
+     **/
     private void showLoginPanel() {
-        JPanel loginPanel = new JPanel(new GridBagLayout());
-        loginPanel.setBorder(BorderFactory.createTitledBorder("🔐 Login"));
+        JPanel loginPanel = new JPanel(new BorderLayout());
+        loginPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+
+        // ===== Title =====
+        JLabel titleLabel = new JLabel("🔐 GlobeMed HMS Login", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 26));
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+        loginPanel.add(titleLabel, BorderLayout.NORTH);
+
+        // ===== Center Form =====
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1, true),
+                BorderFactory.createEmptyBorder(20, 30, 20, 30)
+        ));
+        formPanel.setBackground(new Color(250, 250, 250));
+
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 8, 8, 8);
+        gbc.insets = new Insets(10, 10, 10, 10);
         gbc.anchor = GridBagConstraints.WEST;
 
         JLabel usernameLabel = new JLabel("👤 Username:");
-        JTextField usernameField = new JTextField(20);
+        JTextField usernameField = new JTextField(18);
 
         JLabel passwordLabel = new JLabel("🔑 Password:");
-        JPasswordField passwordField = new JPasswordField(20);
+        JPasswordField passwordField = new JPasswordField(18);
 
         JButton loginButton = new JButton("➡ Login");
-        loginButton.setPreferredSize(new Dimension(120, 30));
+        loginButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        loginButton.setPreferredSize(new Dimension(140, 35));
+        loginButton.setBackground(new Color(0, 123, 255));
+        loginButton.setForeground(Color.WHITE);
+        loginButton.setFocusPainted(false);
 
+        // Hover effect
+        loginButton.addChangeListener(e -> {
+            if (loginButton.getModel().isRollover()) {
+                loginButton.setBackground(new Color(0, 105, 217));
+            } else {
+                loginButton.setBackground(new Color(0, 123, 255));
+            }
+        });
+
+        // ===== Form Layout =====
+        gbc.gridx = 0; gbc.gridy = 0;
+        formPanel.add(usernameLabel, gbc);
+        gbc.gridx = 1;
+        formPanel.add(usernameField, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 1;
+        formPanel.add(passwordLabel, gbc);
+        gbc.gridx = 1;
+        formPanel.add(passwordField, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        formPanel.add(loginButton, gbc);
+
+        loginPanel.add(formPanel, BorderLayout.CENTER);
+
+        // ===== Action =====
         loginButton.addActionListener(e -> {
             String username = usernameField.getText().trim();
             String password = new String(passwordField.getPassword());
@@ -425,25 +471,14 @@ public class MainFrame extends JFrame {
             }
         });
 
-        gbc.gridx = 0; gbc.gridy = 0;
-        loginPanel.add(usernameLabel, gbc);
-        gbc.gridx = 1;
-        loginPanel.add(usernameField, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 1;
-        loginPanel.add(passwordLabel, gbc);
-        gbc.gridx = 1;
-        loginPanel.add(passwordField, gbc);
-
-        gbc.gridx = 1; gbc.gridy = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        loginPanel.add(loginButton, gbc);
-
         mainPanel.add(loginPanel, "LOGIN");
         cardLayout.show(mainPanel, "LOGIN");
     }
 
-    /** ================== DASHBOARD ================== **/
+
+    /**
+     * ================== DASHBOARD ==================
+     **/
     private void showDashboardPanel() {
         JPanel dashboardPanel = new JPanel(new BorderLayout(10, 10));
         dashboardPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -467,7 +502,9 @@ public class MainFrame extends JFrame {
         cardLayout.show(mainPanel, "DASHBOARD");
     }
 
-    /** ================== SIDEBAR ROLE BUTTONS ================== **/
+    /**
+     * ================== SIDEBAR ROLE BUTTONS ==================
+     **/
     private void addSidebarButtons(String role, JPanel sidebar, JPanel contentPanel) {
         switch (role) {
             case "ADMIN" -> setupAdminSidebar(sidebar, contentPanel);
@@ -478,13 +515,10 @@ public class MainFrame extends JFrame {
         }
     }
 
-    /** ================== ADMIN SIDEBAR ================== **/
+    /**
+     * ================== ADMIN SIDEBAR ==================
+     **/
     private void setupAdminSidebar(JPanel sidebar, JPanel contentPanel) {
-        addSidebarButton(sidebar, "👥 Manage Staff", () -> {
-            loadView(contentPanel, "STAFF_MANAGEMENT", "MANAGE_STAFF", new StaffView());
-            logAction("Accessed Manage Staff");
-        });
-
         addSidebarButton(sidebar, "📅 Manage Appointments", () ->
                 loadView(contentPanel, "APPOINTMENT_MANAGEMENT", "MANAGE_APPOINTMENTS", new AppointmentView(loggedInStaff))
         );
@@ -504,6 +538,11 @@ public class MainFrame extends JFrame {
             logAction("Accessed View Reports");
         });
 
+        addSidebarButton(sidebar, "👥 Manage Staff", () -> {
+            loadView(contentPanel, "STAFF_MANAGEMENT", "MANAGE_STAFF", new StaffView());
+            logAction("Accessed Manage Staff");
+        });
+
         addSidebarButton(sidebar, "📜 View Logs", () -> {
             loadView(contentPanel, "REPORTS", "GENERATE_REPORTS", new LogsView());
             logAction("Accessed View Logs");
@@ -512,7 +551,9 @@ public class MainFrame extends JFrame {
         addLogoutButton(sidebar);
     }
 
-    /** ================== DOCTOR SIDEBAR ================== **/
+    /**
+     * ================== DOCTOR SIDEBAR ==================
+     **/
     private void setupDoctorSidebar(JPanel sidebar, JPanel contentPanel) {
         addSidebarButton(sidebar, "📅 Manage Appointments", () ->
                 loadView(contentPanel, "APPOINTMENT_MANAGEMENT", "MANAGE_APPOINTMENTS", new AppointmentView(loggedInStaff))
@@ -530,7 +571,9 @@ public class MainFrame extends JFrame {
         addLogoutButton(sidebar);
     }
 
-    /** ================== NURSE SIDEBAR ================== **/
+    /**
+     * ================== NURSE SIDEBAR ==================
+     **/
     private void setupNurseSidebar(JPanel sidebar, JPanel contentPanel) {
         addSidebarButton(sidebar, "📅 Manage Appointments", () ->
                 loadView(contentPanel, "APPOINTMENT_MANAGEMENT", "MANAGE_APPOINTMENTS", new AppointmentView(loggedInStaff))
@@ -548,7 +591,9 @@ public class MainFrame extends JFrame {
         addLogoutButton(sidebar);
     }
 
-    /** ================== PHARMACIST SIDEBAR ================== **/
+    /**
+     * ================== PHARMACIST SIDEBAR ==================
+     **/
     private void setupPharmacistSidebar(JPanel sidebar, JPanel contentPanel) {
         addSidebarButton(sidebar, "📄 View Prescriptions", () -> {
             loadView(contentPanel, "PRESCRIPTIONS", "VIEW_PRESCRIPTIONS", new ViewPrescriptionsView(loggedInStaff));
@@ -568,7 +613,9 @@ public class MainFrame extends JFrame {
         addLogoutButton(sidebar);
     }
 
-    /** ================== HELPERS ================== **/
+    /**
+     * ================== HELPERS ==================
+     **/
     private void addSidebarButton(JPanel sidebar, String text, Runnable action) {
         JButton button = new JButton(text);
         button.setFocusPainted(false);
