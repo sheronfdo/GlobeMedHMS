@@ -7,8 +7,9 @@ import java.util.List;
 
 public interface BillingService {
     List<Billing> getAllBillings();
-    void saveOrUpdateBilling(Billing billing);
+    Billing saveOrUpdateBilling(Billing billing);
     Billing getBillingById(int id);
-    Billing generateBill(Appointment appointment, double amount);
+    Billing generateBill(Appointment appointment, double amount, String billingType);
     Billing getBillingByAppointment(int appointmentId);
+    void updateBillingStatus(int billingId, String status);
 }

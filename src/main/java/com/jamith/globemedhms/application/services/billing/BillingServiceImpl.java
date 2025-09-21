@@ -2,12 +2,9 @@ package com.jamith.globemedhms.application.services.billing;
 
 import com.jamith.globemedhms.core.entities.Appointment;
 import com.jamith.globemedhms.core.entities.Billing;
-import com.jamith.globemedhms.infrastructure.config.HibernateUtil;
 import com.jamith.globemedhms.infrastructure.repository.BillingRepository;
-import jakarta.persistence.Query;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.Session;
 
 import java.util.List;
 
@@ -21,8 +18,8 @@ public class BillingServiceImpl implements BillingService {
     }
 
     @Override
-    public void saveOrUpdateBilling(Billing billing) {
-        billingRepository.saveOrUpdate(billing);
+    public Billing saveOrUpdateBilling(Billing billing) {
+        return billingRepository.saveOrUpdate(billing);
     }
 
     @Override
@@ -31,10 +28,11 @@ public class BillingServiceImpl implements BillingService {
     }
 
     @Override
-    public Billing generateBill(Appointment appointment, double amount) {
-        Billing billing = new Billing(appointment, amount, "PENDING");
-        saveOrUpdateBilling(billing);
-        logger.info("Generated bill for appointment ID: {}", appointment.getId());
+    public Billing generateBill(Appointment appointment, double amount, String billingType) {
+        String status = "INSURANCE".equals(billingType) ? "INSURANCE_PENDING" : "PENDING";
+        Billing billing = new Billing(appointment, amount, status, billingType);
+        billing = saveOrUpdateBilling(billing);
+        logger.info("Generated {} bill for appointment ID: {}", billingType, appointment.getId());
         return billing;
     }
 
@@ -47,5 +45,15 @@ public class BillingServiceImpl implements BillingService {
             logger.warn("No billing found for appointment ID: {}", appointmentId);
         }
         return billing;
+    }
+
+    @Override
+    public void updateBillingStatus(int billingId, String status) {
+        Billing billing = getBillingById(billingId);
+        if (billing != null) {
+            billing.setStatus(status);
+            saveOrUpdateBilling(billing);
+            logger.info("Updated billing ID {} status to: {}", billingId, status);
+        }
     }
 }

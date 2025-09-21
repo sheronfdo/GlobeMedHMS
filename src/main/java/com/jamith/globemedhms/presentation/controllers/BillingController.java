@@ -13,7 +13,6 @@ import com.jamith.globemedhms.presentation.views.billing.BillingView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 public class BillingController {
     private final BillingView view;
     private final BillingService billingService = new BillingServiceImpl();
@@ -40,10 +39,46 @@ public class BillingController {
                 Appointment selectedAppointment = view.getSelectedAppointment();
                 if (selectedAppointment != null) {
                     double amount = view.getAmount();
+                    String billingType = view.getBillingType();
+
                     if (amount > 0) {
-                        Billing billing = billingService.generateBill(selectedAppointment, amount);
-                        view.showMessage("Bill generated successfully for appointment ID: " + selectedAppointment.getId());
-                        view.enableProcessClaimButton(true);
+                        // Validate insurance information if billing type is INSURANCE
+                        if ("INSURANCE".equals(billingType)) {
+                            String insuranceProvider = view.getInsuranceProvider();
+                            String policyNumber = view.getPolicyNumber();
+
+                            if (insuranceProvider == null || insuranceProvider.trim().isEmpty()) {
+                                view.showMessage("Please enter insurance provider for insurance billing.");
+                                return;
+                            }
+
+                            if (policyNumber == null || policyNumber.trim().isEmpty()) {
+                                view.showMessage("Please enter policy number for insurance billing.");
+                                return;
+                            }
+                        }
+
+                        Billing billing = billingService.generateBill(selectedAppointment, amount, billingType);
+
+                        // For insurance billing, create claim with provider and policy info
+                        if ("INSURANCE".equals(billingType)) {
+                            String insuranceProvider = view.getInsuranceProvider();
+                            String policyNumber = view.getPolicyNumber();
+
+                            InsuranceClaim claim = claimService.createClaim(
+                                    billing,
+                                    insuranceProvider,
+                                    policyNumber
+                            );
+
+                            view.showMessage("Insurance bill generated successfully for appointment ID: " +
+                                    selectedAppointment.getId() + ". Claim ID: " + claim.getId());
+                        } else {
+                            view.showMessage("Direct bill generated successfully for appointment ID: " +
+                                    selectedAppointment.getId());
+                        }
+
+                        view.enableProcessClaimButton("INSURANCE".equals(billingType));
                     } else {
                         view.showMessage("Please enter a valid amount.");
                     }
@@ -52,6 +87,8 @@ public class BillingController {
                 }
             } catch (SecurityException ex) {
                 view.showMessage(ex.getMessage());
+            } catch (IllegalArgumentException ex) {
+                view.showMessage("Error: " + ex.getMessage());
             }
         }
     }
@@ -71,8 +108,13 @@ public class BillingController {
                 if (selectedAppointment != null) {
                     Billing billing = billingService.getBillingByAppointment(selectedAppointment.getId());
                     if (billing != null) {
-                        InsuranceClaim claim = claimService.processClaim(billing);
-                        view.showMessage("Claim processed successfully. Status: " + claim.getStatus());
+                        InsuranceClaim claim = claimService.getClaimByBillingId(billing.getId());
+                        if (claim != null) {
+                            claim = claimService.processClaim(claim);
+                            view.showMessage("Claim processed successfully. Status: " + claim.getStatus());
+                        } else {
+                            view.showMessage("No insurance claim found for this billing.");
+                        }
                     } else {
                         view.showMessage("No billing found for the selected appointment.");
                     }

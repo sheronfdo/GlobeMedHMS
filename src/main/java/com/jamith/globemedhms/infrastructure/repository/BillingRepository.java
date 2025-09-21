@@ -22,15 +22,16 @@ public class BillingRepository {
         }
     }
 
-    public void saveOrUpdate(Billing billing) {
+    public Billing saveOrUpdate(Billing billing) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
-            session.merge(billing);
+            billing = session.merge(billing);
             session.getTransaction().commit();
             logger.info("Saved/Updated billing ID: {}", billing.getId());
         } catch (Exception e) {
             logger.error("Error saving/updating billing", e);
         }
+        return billing;
     }
 
     public Billing findById(int id) {

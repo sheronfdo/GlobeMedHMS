@@ -5,7 +5,8 @@ import com.jamith.globemedhms.core.entities.InsuranceClaim;
 public class CheckEligibilityHandler extends Handler {
     @Override
     public void handle(InsuranceClaim claim) {
-        if (true) { // Replace with real logic, e.g., check insurance status
+        if (claim.getInsuranceProvider() != null && !claim.getInsuranceProvider().isEmpty() &&
+                claim.getPolicyNumber() != null && !claim.getPolicyNumber().isEmpty()) {
             claim.setStatus("ELIGIBLE");
         } else {
             claim.setStatus("INELIGIBLE");

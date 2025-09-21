@@ -32,10 +32,32 @@ public class InsuranceClaimServiceImpl implements InsuranceClaimService {
     }
 
     @Override
-    public InsuranceClaim processClaim(Billing billing) {
-        InsuranceClaim claim = new InsuranceClaim(billing, "PENDING");
+    public InsuranceClaim getClaimByBillingId(int billingId) {
+        return insuranceClaimRepository.findByBillingId(billingId);
+    }
+
+    @Override
+    public InsuranceClaim createClaim(Billing billing, String insuranceProvider, String policyNumber) {
+        // Check if billing is eligible for insurance claim
+        if (!"INSURANCE".equals(billing.getBillingType())) {
+            throw new IllegalArgumentException("Billing is not for insurance");
+        }
+
+        // Check if claim already exists
+        InsuranceClaim existingClaim = getClaimByBillingId(billing.getId());
+        if (existingClaim != null) {
+            throw new IllegalStateException("Claim already exists for this billing");
+        }
+
+        InsuranceClaim claim = new InsuranceClaim(billing, "PENDING", insuranceProvider, policyNumber);
         saveOrUpdateClaim(claim);
 
+        logger.info("Created insurance claim for billing ID: {}", billing.getId());
+        return claim;
+    }
+
+    @Override
+    public InsuranceClaim processClaim(InsuranceClaim claim) {
         // Chain of Responsibility for claim processing
         Handler eligibilityHandler = new CheckEligibilityHandler();
         Handler approvalHandler = new ApproveClaimHandler();
@@ -47,7 +69,7 @@ public class InsuranceClaimServiceImpl implements InsuranceClaimService {
         eligibilityHandler.handle(claim);
 
         saveOrUpdateClaim(claim);
-        logger.info("Processed claim for billing ID: {}", billing.getId());
+        logger.info("Processed claim for billing ID: {}", claim.getBilling().getId());
         return claim;
     }
 }

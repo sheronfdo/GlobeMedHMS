@@ -9,5 +9,7 @@ public interface InsuranceClaimService {
     List<InsuranceClaim> getAllClaims();
     void saveOrUpdateClaim(InsuranceClaim claim);
     InsuranceClaim getClaimById(int id);
-    InsuranceClaim processClaim(Billing billing);
+    InsuranceClaim getClaimByBillingId(int billingId);
+    InsuranceClaim createClaim(Billing billing, String insuranceProvider, String policyNumber);
+    InsuranceClaim processClaim(InsuranceClaim claim);
 }

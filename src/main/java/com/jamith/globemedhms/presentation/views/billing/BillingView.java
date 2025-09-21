@@ -17,6 +17,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.List;
 
 public class BillingView extends JPanel {
@@ -26,6 +28,9 @@ public class BillingView extends JPanel {
     private JList<Appointment> appointmentList;
     private JTextField amountField;
     private JComboBox<String> billingTypeComboBox;
+    private JTextField insuranceProviderField;
+    private JTextField policyNumberField;
+    private JPanel insurancePanel;
     private JButton generateBillButton;
     private JButton processClaimButton;
     private final Staff loggedInStaff;
@@ -67,7 +72,38 @@ public class BillingView extends JPanel {
         detailsPanel.add(new JLabel("Billing Type:"), gbc);
         gbc.gridx++;
         billingTypeComboBox = new JComboBox<>(new String[]{"DIRECT", "INSURANCE"});
+        billingTypeComboBox.addItemListener(new BillingTypeListener());
         detailsPanel.add(billingTypeComboBox, gbc);
+
+        // Insurance Information Panel (initially hidden)
+        insurancePanel = new JPanel(new GridBagLayout());
+        insurancePanel.setBorder(BorderFactory.createTitledBorder("Insurance Information"));
+        insurancePanel.setVisible(false);
+
+        GridBagConstraints insuranceGbc = new GridBagConstraints();
+        insuranceGbc.insets = new Insets(5, 5, 5, 5);
+        insuranceGbc.fill = GridBagConstraints.HORIZONTAL;
+        insuranceGbc.anchor = GridBagConstraints.WEST;
+
+        // Insurance Provider
+        insuranceGbc.gridx = 0; insuranceGbc.gridy = 0;
+        insurancePanel.add(new JLabel("Insurance Provider:"), insuranceGbc);
+        insuranceGbc.gridx++;
+        insuranceProviderField = new JTextField(15);
+        insuranceProviderField.setBorder(new LineBorder(Color.GRAY, 1));
+        insurancePanel.add(insuranceProviderField, insuranceGbc);
+
+        // Policy Number
+        insuranceGbc.gridx = 0; insuranceGbc.gridy++;
+        insurancePanel.add(new JLabel("Policy Number:"), insuranceGbc);
+        insuranceGbc.gridx++;
+        policyNumberField = new JTextField(15);
+        policyNumberField.setBorder(new LineBorder(Color.GRAY, 1));
+        insurancePanel.add(policyNumberField, insuranceGbc);
+
+        gbc.gridx = 0; gbc.gridy++;
+        gbc.gridwidth = 2;
+        detailsPanel.add(insurancePanel, gbc);
 
         // Buttons panel
         gbc.gridx = 0; gbc.gridy++;
@@ -92,8 +128,19 @@ public class BillingView extends JPanel {
         add(detailsPanel, BorderLayout.CENTER);
 
         new BillingController(this, loggedInStaff);
+    }
 
-
+    // Listener for billing type changes
+    class BillingTypeListener implements ItemListener {
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                String selectedType = (String) e.getItem();
+                insurancePanel.setVisible("INSURANCE".equals(selectedType));
+                revalidate();
+                repaint();
+            }
+        }
     }
 
     public void updateAppointmentList() {
@@ -115,6 +162,14 @@ public class BillingView extends JPanel {
 
     public String getBillingType() {
         return (String) billingTypeComboBox.getSelectedItem();
+    }
+
+    public String getInsuranceProvider() {
+        return insuranceProviderField.getText();
+    }
+
+    public String getPolicyNumber() {
+        return policyNumberField.getText();
     }
 
     public void addGenerateBillListener(ActionListener listener) {
