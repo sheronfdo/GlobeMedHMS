@@ -7,6 +7,7 @@ public class RoleFlyweightFactory {
     private static final Map<String, RoleFlyweight> flyweights = new HashMap<>();
 
     public static RoleFlyweight getRoleFlyweight(String roleName) {
-        return flyweights.computeIfAbsent(roleName.toUpperCase(), RoleFlyweight::new);
+        return flyweights.computeIfAbsent(roleName.toUpperCase(),
+                key -> new RoleFlyweight(key));
     }
 }

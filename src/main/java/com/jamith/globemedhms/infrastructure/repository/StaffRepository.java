@@ -2,6 +2,8 @@ package com.jamith.globemedhms.infrastructure.repository;
 
 import com.jamith.globemedhms.core.entities.Staff;
 import com.jamith.globemedhms.infrastructure.config.HibernateUtil;
+import com.jamith.globemedhms.patterns.flyweight.RoleFlyweight;
+import com.jamith.globemedhms.patterns.flyweight.RoleFlyweightFactory;
 import com.jamith.globemedhms.patterns.roleobject.AdminRole;
 import com.jamith.globemedhms.patterns.roleobject.DoctorRole;
 import com.jamith.globemedhms.patterns.roleobject.NurseRole;
@@ -21,12 +23,9 @@ public class StaffRepository {
             Query<Staff> query = session.createQuery("FROM Staff", Staff.class);
             List<Staff> staffList = query.getResultList();
             for (Staff staff : staffList) {
-                switch (staff.getRole()) {
-                    case "DOCTOR" -> staff.addRole(new DoctorRole());
-                    case "NURSE" -> staff.addRole(new NurseRole());
-                    case "PHARMACIST" -> staff.addRole(new PharmacistRole());
-                    case "ADMIN" -> staff.addRole(new AdminRole());
-                }
+                if (!"UNKNOWN".equals(staff.getRole())) {
+                RoleFlyweight flyweight = RoleFlyweightFactory.getRoleFlyweight(staff.getRole());
+                staff.setRoleFlyweight(flyweight);}
             }
             return staffList;
         } catch (Exception e) {
@@ -51,13 +50,9 @@ public class StaffRepository {
             Query<Staff> query = session.createQuery("FROM Staff WHERE username = :username", Staff.class);
             query.setParameter("username", username);
             Staff staff = query.uniqueResult();
-            if (staff != null) {
-                switch (staff.getRole()) {
-                    case "DOCTOR" -> staff.addRole(new DoctorRole());
-                    case "NURSE" -> staff.addRole(new NurseRole());
-                    case "PHARMACIST" -> staff.addRole(new PharmacistRole());
-                    case "ADMIN" -> staff.addRole(new AdminRole());
-                }
+            if (staff != null && !"UNKNOWN".equals(staff.getRole())) {
+                RoleFlyweight flyweight = RoleFlyweightFactory.getRoleFlyweight(staff.getRole());
+                staff.setRoleFlyweight(flyweight);
             }
             return staff;
         } catch (Exception e) {

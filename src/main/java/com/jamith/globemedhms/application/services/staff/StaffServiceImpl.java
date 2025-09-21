@@ -2,6 +2,7 @@ package com.jamith.globemedhms.application.services.staff;
 
 import com.jamith.globemedhms.core.entities.Staff;
 import com.jamith.globemedhms.infrastructure.repository.StaffRepository;
+import com.jamith.globemedhms.patterns.flyweight.RoleFlyweight;
 import com.jamith.globemedhms.patterns.flyweight.RoleFlyweightFactory;
 import com.jamith.globemedhms.patterns.roleobject.AdminRole;
 import com.jamith.globemedhms.patterns.roleobject.DoctorRole;
@@ -58,8 +59,8 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public void assignRole(Staff staff, String roleName) {
-        Role role = createRole(roleName);
-        staff.addRole(role);
+        RoleFlyweight flyweight = RoleFlyweightFactory.getRoleFlyweight(roleName);
+        staff.setRoleFlyweight(flyweight);
         staff.setRole(roleName.toUpperCase());
         saveOrUpdateStaff(staff);
         RoleFlyweightFactory.getRoleFlyweight(roleName);
@@ -68,7 +69,7 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public void revokeRole(Staff staff, String roleName) {
-        staff.getRoles().removeIf(r -> r.getClass().getSimpleName().equalsIgnoreCase(roleName));
+        staff.setRoleFlyweight(null);
         staff.setRole("UNKNOWN"); // staff.getRoles().isEmpty() ? "UNKNOWN" : staff.getRoles().get(0).getClass().getSimpleName().replace("Role", "").toUpperCase()
         saveOrUpdateStaff(staff);
         logger.info("Revoked role {} from staff {}", roleName, staff.getUsername());

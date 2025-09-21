@@ -1,47 +1,39 @@
 package com.jamith.globemedhms.patterns.flyweight;
 
+import com.jamith.globemedhms.patterns.roleobject.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
 public class RoleFlyweight {
     private final String roleName;
-    private final Set<String> permissions = new HashSet<>();
+    private final Role roleObject; // Reference to the Role object
 
     public RoleFlyweight(String roleName) {
         this.roleName = roleName;
-        if ("DOCTOR".equals(roleName)) {
-            permissions.add("VIEW_PATIENT_RECORDS");
-            permissions.add("UPDATE_PATIENT_RECORDS");
-            permissions.add("UPDATE_TREATMENT_PLANS");
-            permissions.add("PRESCRIBE_MEDICATIONS");
-            permissions.add("MANAGE_APPOINTMENTS");
-        } else if ("NURSE".equals(roleName)) {
-            permissions.add("VIEW_PATIENT_RECORDS");
-            permissions.add("UPDATE_PATIENT_RECORDS");
-            permissions.add("ADMINISTER_MEDICATIONS");
-            permissions.add("MANAGE_APPOINTMENTS");
-        } else if ("PHARMACIST".equals(roleName)) {
-            permissions.add("VIEW_PRESCRIPTIONS");
-            permissions.add("DISPENSE_MEDICATIONS");
-            permissions.add("MANAGE_BILLING");
-            permissions.add("PROCESS_CLAIMS");
-        } else if ("ADMIN".equals(roleName)) {
-            permissions.add("MANAGE_STAFF");
-            permissions.add("VIEW_ALL_RECORDS");
-            permissions.add("GENERATE_REPORTS");
-            permissions.add("VIEW_PATIENT_RECORDS");
-            permissions.add("UPDATE_PATIENT_RECORDS");
-            permissions.add("MANAGE_APPOINTMENTS");
-            permissions.add("MANAGE_BILLING");
-            permissions.add("PROCESS_CLAIMS");
-        }
+        // Create the corresponding Role object
+        this.roleObject = createRoleObject(roleName);
+    }
+
+    private Role createRoleObject(String roleName) {
+        return switch (roleName.toUpperCase()) {
+            case "DOCTOR" -> new DoctorRole();
+            case "NURSE" -> new NurseRole();
+            case "PHARMACIST" -> new PharmacistRole();
+            case "ADMIN" -> new AdminRole();
+            default -> throw new IllegalArgumentException("Unknown role: " + roleName);
+        };
     }
 
     public boolean hasPermission(String permission) {
-        return permissions.contains(permission);
+        return roleObject.hasPermission(permission);
     }
 
     public String getRoleName() {
         return roleName;
+    }
+
+    public Role getRoleObject() {
+        return roleObject;
     }
 }
