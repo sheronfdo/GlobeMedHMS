@@ -31,33 +31,6 @@ public class BillingView extends JPanel {
     private final Staff loggedInStaff;
 
     public BillingView(Staff loggedInStaff) {
-//        this.loggedInStaff = loggedInStaff;
-//        setLayout(new BorderLayout(10, 10));
-//        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-//
-//        appointmentList = new JList<>();
-//        updateAppointmentList();
-//        JScrollPane appointmentListScroll = new JScrollPane(appointmentList);
-//        add(appointmentListScroll, BorderLayout.WEST);
-//
-//        JPanel detailsPanel = new JPanel(new GridLayout(4, 2, 5, 5));
-//        detailsPanel.setBorder(BorderFactory.createTitledBorder("Billing and Claims"));
-//        detailsPanel.add(new JLabel("Amount:"));
-//        amountField = new JTextField(20);
-//        detailsPanel.add(amountField);
-//        detailsPanel.add(new JLabel("Billing Type:"));
-//        billingTypeComboBox = new JComboBox<>(new String[]{"DIRECT", "INSURANCE"});
-//        detailsPanel.add(billingTypeComboBox);
-//        generateBillButton = new JButton("Generate Bill");
-//        detailsPanel.add(generateBillButton);
-//        processClaimButton = new JButton("Process Insurance Claim");
-//        processClaimButton.setEnabled(false);
-//        detailsPanel.add(processClaimButton);
-//        add(detailsPanel, BorderLayout.CENTER);
-//
-//        new BillingController(this, loggedInStaff);
-
-
         this.loggedInStaff = loggedInStaff;
         setLayout(new BorderLayout(15, 15));
         setBorder(new EmptyBorder(15, 15, 15, 15));

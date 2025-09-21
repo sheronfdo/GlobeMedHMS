@@ -26,53 +26,6 @@ public class PatientView extends JPanel {
     private JButton updatePatientButton;
 
     public PatientView(Staff loggedInStaff) {
-//        setLayout(new BorderLayout(10, 10));
-//        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-//
-//        patientList = new JList<>();
-//        updatePatientList();
-//        JScrollPane patientListScroll = new JScrollPane(patientList);
-//        add(patientListScroll, BorderLayout.WEST);
-//
-//        JPanel detailsPanel = new JPanel(new GridLayout(6, 2, 5, 5));
-//        detailsPanel.setBorder(BorderFactory.createTitledBorder("Patient Details"));
-//        detailsPanel.add(new JLabel("Name:"));
-//        nameField = new JTextField(20);
-//        detailsPanel.add(nameField);
-//        detailsPanel.add(new JLabel("Date of Birth:"));
-//        dobField = new JTextField(20);
-//        detailsPanel.add(dobField);
-//        detailsPanel.add(new JLabel("Address:"));
-//        addressField = new JTextField(20);
-//        detailsPanel.add(addressField);
-//        detailsPanel.add(new JLabel("Medical History:"));
-//        medicalHistoryArea = new JTextArea(5, 20);
-//        detailsPanel.add(new JScrollPane(medicalHistoryArea));
-//        detailsPanel.add(new JLabel("Treatment Plan:"));
-//        treatmentPlanArea = new JTextArea(5, 20);
-//        detailsPanel.add(new JScrollPane(treatmentPlanArea));
-//        addPatientButton = new JButton("Add Patient");
-//        detailsPanel.add(addPatientButton);
-//        updatePatientButton = new JButton("Update Patient");
-//        detailsPanel.add(updatePatientButton);
-//        add(detailsPanel, BorderLayout.CENTER);
-//
-//        patientList.addListSelectionListener(e -> {
-//            if (!e.getValueIsAdjusting()) {
-//                Patient selectedPatient = patientList.getSelectedValue();
-//                if (selectedPatient != null) {
-//                    nameField.setText(selectedPatient.getName());
-//                    dobField.setText(selectedPatient.getDateOfBirth());
-//                    addressField.setText(selectedPatient.getAddress());
-//                    medicalHistoryArea.setText(EncryptionDecorator.decrypt(selectedPatient.getMedicalHistory()));
-//                    treatmentPlanArea.setText(EncryptionDecorator.decrypt(selectedPatient.getTreatmentPlan()));
-//                }
-//            }
-//        });
-//        new PatientController(this, loggedInStaff);
-
-
-
         setLayout(new BorderLayout(15, 15));
         setBorder(new EmptyBorder(15, 15, 15, 15));
 

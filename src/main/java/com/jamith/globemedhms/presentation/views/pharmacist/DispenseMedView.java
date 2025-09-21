@@ -19,35 +19,6 @@ public class DispenseMedView extends JPanel {
     private JButton dispenseButton;
 
     public DispenseMedView(Staff loggedInStaff) {
-//        setLayout(new BorderLayout(10, 10));
-//        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-//
-//        appointmentList = new JList<>();
-//        updateAppointmentList();
-//        JScrollPane appointmentListScroll = new JScrollPane(appointmentList);
-//        add(appointmentListScroll, BorderLayout.WEST);
-//
-//        JPanel detailsPanel = new JPanel(new GridLayout(2, 1, 5, 5));
-//        detailsPanel.setBorder(BorderFactory.createTitledBorder("Dispense Medications"));
-//        prescriptionArea = new JTextArea(5, 20);
-//        prescriptionArea.setEditable(false);
-//        detailsPanel.add(new JScrollPane(prescriptionArea));
-//        dispenseButton = new JButton("Dispense and Record");
-//        detailsPanel.add(dispenseButton);
-//        add(detailsPanel, BorderLayout.CENTER);
-//
-//        appointmentList.addListSelectionListener(e -> {
-//            if (!e.getValueIsAdjusting()) {
-//                Appointment selectedAppointment = appointmentList.getSelectedValue();
-//                if (selectedAppointment != null) {
-//                    prescriptionArea.setText(selectedAppointment.getPrescription());
-//                }
-//            }
-//        });
-//
-//        new PharmacistController(this, loggedInStaff);
-
-
         setLayout(new BorderLayout(15, 15));
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
