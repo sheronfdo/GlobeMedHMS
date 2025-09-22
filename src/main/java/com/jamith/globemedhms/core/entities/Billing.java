@@ -23,6 +23,13 @@ public class Billing {
     @Column(name = "billing_type", nullable = false)
     private String billingType;
 
+    @Column(name = "payment_date")
+    private String paymentDate;
+
+    @Column(name = "payment_method")
+    private String paymentMethod;
+
+
     public Billing() {}
 
 //    public Billing(Appointment appointment, double amount, String status) {
@@ -36,6 +43,8 @@ public class Billing {
         this.amount = amount;
         this.status = status;
         this.billingType = billingType;
+        this.paymentDate = null;
+        this.paymentMethod = null;
     }
 
     public int getId() { return id; }
@@ -48,7 +57,11 @@ public class Billing {
     public void setStatus(String status) { this.status = status; }
     public String getBillingType() { return billingType; }
     public void setBillingType(String billingType) { this.billingType = billingType; }
+    public String getPaymentDate() { return paymentDate; }
+    public void setPaymentDate(String paymentDate) { this.paymentDate = paymentDate; }
 
+    public String getPaymentMethod() { return paymentMethod; }
+    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
 
     public String accept(ReportVisitor visitor) {
         return visitor.visit(this);

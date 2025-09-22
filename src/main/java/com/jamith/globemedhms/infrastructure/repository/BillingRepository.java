@@ -125,4 +125,24 @@ public class BillingRepository {
             return 0;
         }
     }
+
+    public List<Billing> findByStatus(String status) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Billing> query = session.createQuery(
+                    "FROM Billing WHERE status = :status ORDER BY id DESC", Billing.class);
+            query.setParameter("status", status);
+            return query.getResultList();
+        } catch (Exception e) {
+            logger.error("Error fetching billings with status: {}", status, e);
+            return List.of();
+        }
+    }
+
+    public List<Billing> getPendingBillings() {
+        return findByStatus("PENDING");
+    }
+
+    public List<Billing> getPendingInsuranceBillings() {
+        return findByStatus("INSURANCE_PENDING");
+    }
 }

@@ -58,6 +58,50 @@ public class BillingServiceImpl implements BillingService {
     }
 
     @Override
+    public Billing processCashPayment(int billingId) {
+        Billing billing = getBillingById(billingId);
+        if (billing != null && "PENDING".equals(billing.getStatus())) {
+            billing.setStatus("PAID");
+            billing.setPaymentDate(java.time.LocalDate.now().toString());
+            billing.setPaymentMethod("CASH");
+            billing = saveOrUpdateBilling(billing);
+            logger.info("Processed cash payment for billing ID: {}", billingId);
+            return billing;
+        } else {
+            logger.warn("Cannot process cash payment for billing ID: {}. Status: {}",
+                    billingId, billing != null ? billing.getStatus() : "NOT_FOUND");
+            throw new IllegalStateException("Billing is not in PENDING status or not found");
+        }
+    }
+
+    @Override
+    public Billing processInsurancePayment(int billingId) {
+        Billing billing = getBillingById(billingId);
+        if (billing != null && "INSURANCE_PENDING".equals(billing.getStatus())) {
+            billing.setStatus("INSURANCE_PAID");
+            billing.setPaymentDate(java.time.LocalDate.now().toString());
+            billing.setPaymentMethod("INSURANCE");
+            billing = saveOrUpdateBilling(billing);
+            logger.info("Processed insurance payment for billing ID: {}", billingId);
+            return billing;
+        } else {
+            logger.warn("Cannot process insurance payment for billing ID: {}. Status: {}",
+                    billingId, billing != null ? billing.getStatus() : "NOT_FOUND");
+            throw new IllegalStateException("Billing is not in INSURANCE_PENDING status or not found");
+        }
+    }
+
+    @Override
+    public List<Billing> getPendingBillings() {
+        return billingRepository.findByStatus("PENDING");
+    }
+
+    @Override
+    public List<Billing> getPendingInsuranceBillings() {
+        return billingRepository.findByStatus("INSURANCE_PENDING");
+    }
+
+    @Override
     public List<Object[]> getMonthlyRevenue() {
         return billingRepository.getMonthlyRevenue();
     }

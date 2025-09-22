@@ -8,6 +8,7 @@ import com.jamith.globemedhms.infrastructure.repository.AuditLogRepository;
 import com.jamith.globemedhms.patterns.proxy.ResourceProxy;
 import com.jamith.globemedhms.presentation.views.appointment.AppointmentView;
 import com.jamith.globemedhms.presentation.views.billing.BillingView;
+import com.jamith.globemedhms.presentation.views.billing.PaymentView;
 import com.jamith.globemedhms.presentation.views.logs.LogsView;
 import com.jamith.globemedhms.presentation.views.nurse.AdministerMedView;
 import com.jamith.globemedhms.presentation.views.patient.PatientView;
@@ -182,6 +183,11 @@ public class MainFrame extends JFrame {
             logAction("Accessed Billing and Claims");
         });
 
+        addSidebarButton(sidebar, "💳 Process Payments", () -> {
+            loadView(contentPanel, "PAYMENT_PROCESSING", "MANAGE_BILLING", new PaymentView(loggedInStaff));
+            logAction("Accessed Process Payments");
+        });
+
         addSidebarButton(sidebar, "📊 View Reports", () -> {
             loadView(contentPanel, "REPORTS", "GENERATE_REPORTS", new ReportView(loggedInStaff));
             logAction("Accessed View Reports");
@@ -257,6 +263,11 @@ public class MainFrame extends JFrame {
         addSidebarButton(sidebar, "💰 Billing & Claims", () -> {
             loadView(contentPanel, "BILLING_CLAIMS", "MANAGE_BILLING", new BillingView(loggedInStaff));
             logAction("Accessed Billing and Claims");
+        });
+
+        addSidebarButton(sidebar, "💳 Process Payments", () -> {
+            loadView(contentPanel, "PAYMENT_PROCESSING", "MANAGE_BILLING", new PaymentView(loggedInStaff));
+            logAction("Accessed Process Payments");
         });
 
         addLogoutButton(sidebar);

@@ -13,6 +13,11 @@ public interface BillingService {
     Billing getBillingByAppointment(int appointmentId);
     void updateBillingStatus(int billingId, String status);
 
+    Billing processCashPayment(int billingId);
+    Billing processInsurancePayment(int billingId);
+    List<Billing> getPendingBillings();
+    List<Billing> getPendingInsuranceBillings();
+
     List<Object[]> getMonthlyRevenue();
     List<Object[]> getBillingStatusDistribution();
     List<Object[]> getBillingTypeDistribution();
