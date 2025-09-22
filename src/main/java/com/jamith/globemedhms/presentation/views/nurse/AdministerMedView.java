@@ -4,6 +4,7 @@ import com.jamith.globemedhms.application.services.patient.PatientService;
 import com.jamith.globemedhms.application.services.patient.PatientServiceImpl;
 import com.jamith.globemedhms.core.entities.Patient;
 import com.jamith.globemedhms.core.entities.Staff;
+import com.jamith.globemedhms.patterns.decorator.EncryptionDecorator;
 import com.jamith.globemedhms.presentation.controllers.AdministerMedController;
 
 import javax.swing.*;
@@ -69,7 +70,7 @@ public class AdministerMedView extends JPanel {
             if (!e.getValueIsAdjusting()) {
                 Patient selectedPatient = patientList.getSelectedValue();
                 if (selectedPatient != null) {
-                    medNotesArea.setText(selectedPatient.getHistory());
+                    medNotesArea.setText(EncryptionDecorator.decrypt(selectedPatient.getHistory()));
                 }
             }
         });
