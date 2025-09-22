@@ -66,4 +66,13 @@ public class Billing {
     public String accept(ReportVisitor visitor) {
         return visitor.visit(this);
     }
+
+    @Override
+    public String toString() {
+        return String.format("Bill #%d - %s - $%.2f - %s",
+                id,
+                appointment.getPatient().getName(),
+                amount,
+                appointment.getDate());
+    }
 }

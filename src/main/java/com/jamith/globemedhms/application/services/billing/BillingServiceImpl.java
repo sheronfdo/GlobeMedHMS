@@ -65,12 +65,14 @@ public class BillingServiceImpl implements BillingService {
             billing.setPaymentDate(java.time.LocalDate.now().toString());
             billing.setPaymentMethod("CASH");
             billing = saveOrUpdateBilling(billing);
-            logger.info("Processed cash payment for billing ID: {}", billingId);
+            logger.info("💰 Processed CASH payment for Bill #{} - Patient: {}",
+                    billingId, billing.getAppointment().getPatient().getName());
             return billing;
         } else {
-            logger.warn("Cannot process cash payment for billing ID: {}. Status: {}",
+            String errorMsg = String.format("Cannot process cash payment for Bill #%d. Current status: %s",
                     billingId, billing != null ? billing.getStatus() : "NOT_FOUND");
-            throw new IllegalStateException("Billing is not in PENDING status or not found");
+            logger.warn(errorMsg);
+            throw new IllegalStateException(errorMsg);
         }
     }
 
@@ -82,12 +84,14 @@ public class BillingServiceImpl implements BillingService {
             billing.setPaymentDate(java.time.LocalDate.now().toString());
             billing.setPaymentMethod("INSURANCE");
             billing = saveOrUpdateBilling(billing);
-            logger.info("Processed insurance payment for billing ID: {}", billingId);
+            logger.info("🏥 Processed INSURANCE payment for Bill #{} - Patient: {}",
+                    billingId, billing.getAppointment().getPatient().getName());
             return billing;
         } else {
-            logger.warn("Cannot process insurance payment for billing ID: {}. Status: {}",
+            String errorMsg = String.format("Cannot process insurance payment for Bill #%d. Current status: %s",
                     billingId, billing != null ? billing.getStatus() : "NOT_FOUND");
-            throw new IllegalStateException("Billing is not in INSURANCE_PENDING status or not found");
+            logger.warn(errorMsg);
+            throw new IllegalStateException(errorMsg);
         }
     }
 

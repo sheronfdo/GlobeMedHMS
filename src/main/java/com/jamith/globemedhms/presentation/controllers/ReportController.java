@@ -182,7 +182,7 @@ public class ReportController {
             panel.add(analyticsService.createStaffAppointmentChart());
 
             JScrollPane scrollPane = new JScrollPane(panel);
-            scrollPane.setPreferredSize(new Dimension(800, 600));
+            scrollPane.setPreferredSize(new Dimension(800, 450));
 
             JPanel panel2  = new JPanel();
             panel2.add(scrollPane);
@@ -201,7 +201,7 @@ public class ReportController {
             panel.add(new JPanel());
 
             JScrollPane scrollPane = new JScrollPane(panel);
-            scrollPane.setPreferredSize(new Dimension(800, 600));
+            scrollPane.setPreferredSize(new Dimension(800, 450));
 
             JPanel panel2  = new JPanel();
             panel2.add(scrollPane);
