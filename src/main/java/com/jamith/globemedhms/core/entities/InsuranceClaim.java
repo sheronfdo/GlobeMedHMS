@@ -1,5 +1,6 @@
 package com.jamith.globemedhms.core.entities;
 
+import com.jamith.globemedhms.patterns.visitor.ReportVisitor;
 import jakarta.persistence.*;
 
 @Entity
@@ -47,4 +48,8 @@ public class InsuranceClaim {
     public void setInsuranceProvider(String insuranceProvider) { this.insuranceProvider = insuranceProvider; }
     public String getPolicyNumber() { return policyNumber; }
     public void setPolicyNumber(String policyNumber) { this.policyNumber = policyNumber; }
+
+    public String accept(ReportVisitor visitor) {
+        return visitor.visit(this);
+    }
 }

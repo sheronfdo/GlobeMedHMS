@@ -2,6 +2,7 @@ package com.jamith.globemedhms.core.entities;
 
 import com.jamith.globemedhms.patterns.flyweight.RoleFlyweight;
 import com.jamith.globemedhms.patterns.roleobject.Role;
+import com.jamith.globemedhms.patterns.visitor.ReportVisitor;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -112,5 +113,9 @@ public class Staff {
     @Override
     public String toString() {
         return name + " (" + username + ")";
+    }
+
+    public String accept(ReportVisitor visitor) {
+        return visitor.visit(this);
     }
 }

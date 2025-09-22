@@ -1,14 +1,9 @@
 package com.jamith.globemedhms.presentation.controllers;
 
-import com.jamith.globemedhms.core.entities.Appointment;
-import com.jamith.globemedhms.core.entities.Billing;
-import com.jamith.globemedhms.core.entities.Patient;
-import com.jamith.globemedhms.core.entities.Staff;
+import com.jamith.globemedhms.application.services.report.PdfReportService;
+import com.jamith.globemedhms.core.entities.*;
 import com.jamith.globemedhms.patterns.proxy.ResourceProxy;
-import com.jamith.globemedhms.patterns.visitor.DiagnosticResultsVisitor;
-import com.jamith.globemedhms.patterns.visitor.FinancialReportVisitor;
-import com.jamith.globemedhms.patterns.visitor.ReportVisitor;
-import com.jamith.globemedhms.patterns.visitor.TreatmentSummaryVisitor;
+import com.jamith.globemedhms.patterns.visitor.*;
 import com.jamith.globemedhms.presentation.views.report.ReportView;
 
 import java.awt.event.ActionEvent;
@@ -21,6 +16,8 @@ public class ReportController {
     public ReportController(ReportView view, Staff loggedInStaff) {
         this.view = view;
         view.addGenerateReportListener(new GenerateReportListener(loggedInStaff));
+        view.addExportPdfListener(new ExportPdfListener(loggedInStaff));
+        view.addShowChartListener(new ShowAnalyticsListener(loggedInStaff));
     }
 
     class GenerateReportListener implements ActionListener {
@@ -40,56 +37,100 @@ public class ReportController {
                     return;
                 }
 
-                ReportVisitor visitor;
-                String reportType = view.getReportType();
-                switch (reportType) {
-                    case "Treatment Summary":
-                        visitor = new TreatmentSummaryVisitor();
-                        break;
-                    case "Diagnostic Results":
-                        visitor = new DiagnosticResultsVisitor();
-                        break;
-                    case "Financial Report":
-                        visitor = new FinancialReportVisitor();
-                        break;
-                    default:
-                        view.showMessage("Invalid report type.");
-                        return;
+                ReportVisitor visitor = createVisitor(view.getReportType());
+                if (visitor == null) {
+                    view.showMessage("Invalid report type.");
+                    return;
                 }
 
-                String report;
-                String entityType = view.getEntityType();
-                switch (entityType) {
-                    case "Patient":
-                        if (selectedEntity instanceof Patient) {
-                            report = ((Patient) selectedEntity).accept(visitor);
-                        } else {
-                            view.showMessage("Selected entity is not a Patient.");
-                            return;
-                        }
-                        break;
-                    case "Appointment":
-                        if (selectedEntity instanceof Appointment) {
-                            report = ((Appointment) selectedEntity).accept(visitor);
-                        } else {
-                            view.showMessage("Selected entity is not an Appointment.");
-                            return;
-                        }
-                        break;
-                    case "Billing":
-                        if (selectedEntity instanceof Billing) {
-                            report = ((Billing) selectedEntity).accept(visitor);
-                        } else {
-                            view.showMessage("Selected entity is not a Billing.");
-                            return;
-                        }
-                        break;
-                    default:
-                        view.showMessage("Invalid entity type.");
-                        return;
-                }
-
+                String report = generateReport(selectedEntity, visitor, view.getEntityType());
                 view.setReportOutput(report);
+
+            } catch (SecurityException ex) {
+                view.showMessage(ex.getMessage());
+            }
+        }
+
+        private ReportVisitor createVisitor(String reportType) {
+            switch (reportType) {
+                case "Treatment Summary": return new TreatmentSummaryVisitor();
+                case "Diagnostic Results": return new DiagnosticResultsVisitor();
+                case "Financial Report": return new FinancialReportVisitor();
+                case "Staff Performance": return new StaffPerformanceVisitor();
+                default: return null;
+            }
+        }
+
+        private String generateReport(Object entity, ReportVisitor visitor, String entityType) {
+            switch (entityType) {
+                case "Patient": return ((Patient) entity).accept(visitor);
+                case "Appointment": return ((Appointment) entity).accept(visitor);
+                case "Billing": return ((Billing) entity).accept(visitor);
+                case "Insurance Claim": return ((InsuranceClaim) entity).accept(visitor);
+                case "Staff": return ((Staff) entity).accept(visitor);
+                default: return "Invalid entity type.";
+            }
+        }
+    }
+
+    class ExportPdfListener implements ActionListener {
+        private final Staff staff;
+
+        public ExportPdfListener(Staff staff) {
+            this.staff = staff;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                proxy.accessResource(staff, "REPORTS", "GENERATE_REPORTS");
+                Object selectedEntity = view.getSelectedEntity();
+                if (selectedEntity == null) {
+                    view.showMessage("Please select an entity.");
+                    return;
+                }
+
+                String reportType = view.getReportType();
+                String filename = generatePdfReport(selectedEntity, reportType);
+
+                if (filename != null) {
+                    view.showMessage("PDF report generated: " + filename);
+                    view.openPdfFile(filename);
+                } else {
+                    view.showMessage("Failed to generate PDF report.");
+                }
+            } catch (SecurityException ex) {
+                view.showMessage(ex.getMessage());
+            }
+        }
+
+        private String generatePdfReport(Object entity, String reportType) {
+            if (entity instanceof Patient) {
+                return PdfReportService.generatePatientReport((Patient) entity, reportType);
+            } else if (entity instanceof Appointment) {
+                return PdfReportService.generateAppointmentReport((Appointment) entity, reportType);
+            } else if (entity instanceof Billing) {
+                return PdfReportService.generateBillingReport((Billing) entity, reportType);
+            } else if (entity instanceof InsuranceClaim) {
+                return PdfReportService.generateInsuranceClaimReport((InsuranceClaim) entity, reportType);
+            }
+            return null;
+        }
+    }
+
+    class ShowAnalyticsListener implements ActionListener {
+        private final Staff staff;
+
+        public ShowAnalyticsListener(Staff staff) {
+            this.staff = staff;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                proxy.accessResource(staff, "REPORTS", "GENERATE_REPORTS");
+                // Placeholder for analytics functionality
+                view.showMessage("Analytics feature coming soon!");
             } catch (SecurityException ex) {
                 view.showMessage(ex.getMessage());
             }
