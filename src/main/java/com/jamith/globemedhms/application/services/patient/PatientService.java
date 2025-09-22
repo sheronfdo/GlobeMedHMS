@@ -8,4 +8,7 @@ public interface PatientService {
     List<Patient> getAllPatients();
     void saveOrUpdatePatient(Patient patient);
     Patient getPatientById(int id);
+    List<Object[]> getPatientAgeDistribution();
+    List<Object[]> getMonthlyRegistrationTrend();
+    long getTotalPatientCount();
 }

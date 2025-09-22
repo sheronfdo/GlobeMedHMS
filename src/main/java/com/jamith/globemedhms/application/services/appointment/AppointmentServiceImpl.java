@@ -77,4 +77,43 @@ public class AppointmentServiceImpl implements AppointmentService {
         patientService.saveOrUpdatePatient(updatedPatient);
         logger.info("Appointment completed for patient: {}", patient.getName());
     }
+
+    @Override
+    public List<Object[]> getAppointmentStatusCount() {
+        return appointmentRepository.getAppointmentStatusCount();
+    }
+
+    @Override
+    public List<Object[]> getAppointmentTypeCount() {
+        return appointmentRepository.getAppointmentTypeCount();
+    }
+
+    @Override
+    public List<Object[]> getMonthlyAppointmentTrend() {
+        return appointmentRepository.getMonthlyAppointmentTrend();
+    }
+
+    @Override
+    public List<Object[]> getStaffAppointmentCount() {
+        return appointmentRepository.getStaffAppointmentCount();
+    }
+
+    @Override
+    public long getTotalAppointmentCount() {
+        return appointmentRepository.getTotalAppointmentCount();
+    }
+
+    @Override
+    public long getCompletedAppointmentCount() {
+        return appointmentRepository.getCompletedAppointmentCount();
+    }
+
+    // Additional utility methods
+    public List<Appointment> getAppointmentsByPatient(int patientId) {
+        return appointmentRepository.getAppointmentsByPatient(patientId);
+    }
+
+    public List<Appointment> getUpcomingAppointments() {
+        return appointmentRepository.getUpcomingAppointments();
+    }
 }

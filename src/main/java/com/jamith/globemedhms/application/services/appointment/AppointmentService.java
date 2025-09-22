@@ -11,4 +11,10 @@ public interface AppointmentService {
     void saveOrUpdateAppointment(Appointment appointment);
     boolean hasConflict(int staffId, String date, String time);
     void completeAppointment(Appointment appointment, String treatmentDetails, String prescription);
+    List<Object[]> getAppointmentStatusCount();
+    List<Object[]> getAppointmentTypeCount();
+    List<Object[]> getMonthlyAppointmentTrend();
+    List<Object[]> getStaffAppointmentCount();
+    long getTotalAppointmentCount();
+    long getCompletedAppointmentCount();
 }

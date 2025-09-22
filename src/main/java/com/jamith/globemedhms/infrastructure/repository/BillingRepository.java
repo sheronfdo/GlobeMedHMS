@@ -57,4 +57,72 @@ public class BillingRepository {
             return null;
         }
     }
+
+    public List<Object[]> getMonthlyRevenue() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Object[]> query = session.createQuery(
+                    "SELECT FUNCTION('DATE_FORMAT', CURRENT_DATE, '%Y-%m'), SUM(amount) " +
+                            "FROM Billing WHERE status = 'PAID' GROUP BY FUNCTION('DATE_FORMAT', CURRENT_DATE, '%Y-%m')",
+                    Object[].class);
+            return query.getResultList();
+        } catch (Exception e) {
+            logger.error("Error fetching monthly revenue", e);
+            return List.of();
+        }
+    }
+
+    public List<Object[]> getBillingStatusDistribution() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Object[]> query = session.createQuery(
+                    "SELECT status, COUNT(*) FROM Billing GROUP BY status", Object[].class);
+            return query.getResultList();
+        } catch (Exception e) {
+            logger.error("Error fetching billing status distribution", e);
+            return List.of();
+        }
+    }
+
+    public List<Object[]> getBillingTypeDistribution() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Object[]> query = session.createQuery(
+                    "SELECT billingType, COUNT(*) FROM Billing GROUP BY billingType", Object[].class);
+            return query.getResultList();
+        } catch (Exception e) {
+            logger.error("Error fetching billing type distribution", e);
+            return List.of();
+        }
+    }
+
+    public double getTotalRevenue() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Double> query = session.createQuery(
+                    "SELECT SUM(amount) FROM Billing WHERE status = 'PAID'", Double.class);
+            Double result = query.uniqueResult();
+            return result != null ? result : 0.0;
+        } catch (Exception e) {
+            logger.error("Error fetching total revenue", e);
+            return 0.0;
+        }
+    }
+
+    public long getTotalBillingCount() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Long> query = session.createQuery("SELECT COUNT(*) FROM Billing", Long.class);
+            return query.uniqueResult();
+        } catch (Exception e) {
+            logger.error("Error fetching total billing count", e);
+            return 0;
+        }
+    }
+
+    public long getInsuranceBillingCount() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Long> query = session.createQuery(
+                    "SELECT COUNT(*) FROM Billing WHERE billingType = 'INSURANCE'", Long.class);
+            return query.uniqueResult();
+        } catch (Exception e) {
+            logger.error("Error fetching insurance billing count", e);
+            return 0;
+        }
+    }
 }

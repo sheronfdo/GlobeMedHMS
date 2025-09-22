@@ -1,17 +1,22 @@
 package com.jamith.globemedhms.presentation.controllers;
 
+import com.jamith.globemedhms.application.services.analytics.AnalyticsService;
 import com.jamith.globemedhms.application.services.report.PdfReportService;
 import com.jamith.globemedhms.core.entities.*;
 import com.jamith.globemedhms.patterns.proxy.ResourceProxy;
 import com.jamith.globemedhms.patterns.visitor.*;
 import com.jamith.globemedhms.presentation.views.report.ReportView;
 
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ReportController {
     private final ReportView view;
     private final ResourceProxy proxy = new ResourceProxy();
+    private final AnalyticsService analyticsService = new AnalyticsService();
+
 
     public ReportController(ReportView view, Staff loggedInStaff) {
         this.view = view;
@@ -129,11 +134,111 @@ public class ReportController {
         public void actionPerformed(ActionEvent e) {
             try {
                 proxy.accessResource(staff, "REPORTS", "GENERATE_REPORTS");
-                // Placeholder for analytics functionality
-                view.showMessage("Analytics feature coming soon!");
+
+                JPanel analyticsPanel = createAnalyticsDashboard();
+                view.showAnalytics(analyticsPanel);
+
             } catch (SecurityException ex) {
                 view.showMessage(ex.getMessage());
             }
+        }
+
+        private JPanel createAnalyticsDashboard() {
+            JTabbedPane analyticsTabs = new JTabbedPane();
+
+            // Statistical Summary Tab
+            JPanel summaryPanel = analyticsService.createStatisticalSummary();
+            analyticsTabs.addTab("📊 Summary", summaryPanel);
+
+            // Appointment Analytics Tab
+            JPanel appointmentPanel = createAppointmentAnalytics();
+            analyticsTabs.addTab("📅 Appointments", appointmentPanel);
+
+            // Billing Analytics Tab
+            JPanel billingPanel = createBillingAnalytics();
+            analyticsTabs.addTab("💰 Billing", billingPanel);
+
+            // Patient Analytics Tab
+            JPanel patientPanel = createPatientAnalytics();
+            analyticsTabs.addTab("👥 Patients", patientPanel);
+
+            // Staff Analytics Tab
+            JPanel staffPanel = createStaffAnalytics();
+            analyticsTabs.addTab("👨‍⚕️ Staff", staffPanel);
+
+            JPanel mainPanel = new JPanel(new BorderLayout());
+            mainPanel.add(analyticsTabs, BorderLayout.CENTER);
+
+            return mainPanel;
+        }
+
+        private JPanel createAppointmentAnalytics() {
+            JPanel panel = new JPanel(new GridLayout(2, 2, 10, 10));
+            panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+            panel.add(analyticsService.createAppointmentStatusChart());
+            panel.add(analyticsService.createAppointmentTypeChart());
+            panel.add(analyticsService.createMonthlyAppointmentTrend());
+            panel.add(analyticsService.createStaffAppointmentChart());
+
+            JScrollPane scrollPane = new JScrollPane(panel);
+            scrollPane.setPreferredSize(new Dimension(800, 600));
+
+            JPanel panel2  = new JPanel();
+            panel2.add(scrollPane);
+            return panel2;
+        }
+
+        private JPanel createBillingAnalytics() {
+            JPanel panel = new JPanel(new GridLayout(2, 2, 10, 10));
+            panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+            panel.add(analyticsService.createRevenueChart());
+            panel.add(analyticsService.createBillingStatusChart());
+            panel.add(analyticsService.createInsuranceVsDirectBillingChart());
+
+            // Add empty panel for layout
+            panel.add(new JPanel());
+
+            JScrollPane scrollPane = new JScrollPane(panel);
+            scrollPane.setPreferredSize(new Dimension(800, 600));
+
+            JPanel panel2  = new JPanel();
+            panel2.add(scrollPane);
+            return panel2;
+        }
+
+        private JPanel createPatientAnalytics() {
+            JPanel panel = new JPanel(new GridLayout(2, 2, 10, 10));
+            panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+            panel.add(analyticsService.createPatientAgeDistributionChart());
+            panel.add(analyticsService.createPatientRegistrationTrend());
+
+            // Add empty panels for layout
+            panel.add(new JPanel());
+            panel.add(new JPanel());
+
+            JScrollPane scrollPane = new JScrollPane(panel);
+            scrollPane.setPreferredSize(new Dimension(800, 600));
+
+            JPanel panel2  = new JPanel();
+            panel2.add(scrollPane);
+            return panel2;
+        }
+
+        private JPanel createStaffAnalytics() {
+            JPanel panel = new JPanel(new BorderLayout());
+            panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+            panel.add(analyticsService.createStaffAppointmentChart(), BorderLayout.CENTER);
+
+            JScrollPane scrollPane = new JScrollPane(panel);
+            scrollPane.setPreferredSize(new Dimension(800, 400));
+
+            JPanel panel2  = new JPanel();
+            panel2.add(scrollPane);
+            return panel2;
         }
     }
 }

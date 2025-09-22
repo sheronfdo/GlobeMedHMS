@@ -56,4 +56,34 @@ public class BillingServiceImpl implements BillingService {
             logger.info("Updated billing ID {} status to: {}", billingId, status);
         }
     }
+
+    @Override
+    public List<Object[]> getMonthlyRevenue() {
+        return billingRepository.getMonthlyRevenue();
+    }
+
+    @Override
+    public List<Object[]> getBillingStatusDistribution() {
+        return billingRepository.getBillingStatusDistribution();
+    }
+
+    @Override
+    public List<Object[]> getBillingTypeDistribution() {
+        return billingRepository.getBillingTypeDistribution();
+    }
+
+    @Override
+    public double getTotalRevenue() {
+       return billingRepository.getTotalRevenue();
+    }
+
+    @Override
+    public long getTotalBillingCount() {
+        return billingRepository.getTotalBillingCount();
+    }
+
+    @Override
+    public long getInsuranceBillingCount() {
+        return billingRepository.getInsuranceBillingCount();
+    }
 }

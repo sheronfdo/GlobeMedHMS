@@ -12,4 +12,11 @@ public interface BillingService {
     Billing generateBill(Appointment appointment, double amount, String billingType);
     Billing getBillingByAppointment(int appointmentId);
     void updateBillingStatus(int billingId, String status);
+
+    List<Object[]> getMonthlyRevenue();
+    List<Object[]> getBillingStatusDistribution();
+    List<Object[]> getBillingTypeDistribution();
+    double getTotalRevenue();
+    long getTotalBillingCount();
+    long getInsuranceBillingCount();
 }

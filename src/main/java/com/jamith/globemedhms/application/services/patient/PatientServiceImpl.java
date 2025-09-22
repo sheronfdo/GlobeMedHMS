@@ -21,7 +21,7 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public void saveOrUpdatePatient(Patient patient) {
         try {
-            System.out.println(patient.getMedicalHistory() + " "+patient.getTreatmentPlan());
+            System.out.println(patient.getMedicalHistory() + " " + patient.getTreatmentPlan());
             // Encrypt sensitive fields before saving
             if (patient.getName() != null) {
                 patient.setName(SanitizationDecorator.sanitize(patient.getName()));
@@ -58,5 +58,20 @@ public class PatientServiceImpl implements PatientService {
             }
         }
         return patient;
+    }
+
+    @Override
+    public List<Object[]> getPatientAgeDistribution() {
+        return patientRepository.getPatientAgeDistribution();
+    }
+
+    @Override
+    public List<Object[]> getMonthlyRegistrationTrend() {
+        return patientRepository.getMonthlyRegistrationTrend();
+    }
+
+    @Override
+    public long getTotalPatientCount() {
+        return  patientRepository.getTotalPatientCount();
     }
 }
